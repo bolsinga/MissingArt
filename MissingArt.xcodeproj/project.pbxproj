@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FE3410FA280F620A005AF354 /* MissingArtworkUI in Frameworks */ = {isa = PBXBuildFile; productRef = FE3410F9280F620A005AF354 /* MissingArtworkUI */; };
-		FE59DCF22810ED94004F774C /* MissingArtworkUI in Frameworks */ = {isa = PBXBuildFile; productRef = FE59DCF12810ED94004F774C /* MissingArtworkUI */; };
 		FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */; };
 		FE6D2C5127FF54670056FA7E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D2C5027FF54670056FA7E /* ContentView.swift */; };
 		FE6D2C5327FF54680056FA7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5227FF54680056FA7E /* Assets.xcassets */; };
 		FE6D2C5627FF54680056FA7E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5527FF54680056FA7E /* Preview Assets.xcassets */; };
+		FE95DA48281216E1009B0209 /* MissingArtwork in Frameworks */ = {isa = PBXBuildFile; productRef = FE95DA47281216E1009B0209 /* MissingArtwork */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE59DCF22810ED94004F774C /* MissingArtworkUI in Frameworks */,
-				FE3410FA280F620A005AF354 /* MissingArtworkUI in Frameworks */,
+				FE95DA48281216E1009B0209 /* MissingArtwork in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,12 +93,10 @@
 			buildRules = (
 			);
 			dependencies = (
-				FE3410F8280F6204005AF354 /* PBXTargetDependency */,
 			);
 			name = MissingArt;
 			packageProductDependencies = (
-				FE3410F9280F620A005AF354 /* MissingArtworkUI */,
-				FE59DCF12810ED94004F774C /* MissingArtworkUI */,
+				FE95DA47281216E1009B0209 /* MissingArtwork */,
 			);
 			productName = MissingArt;
 			productReference = FE6D2C4B27FF54670056FA7E /* MissingArt.app */;
@@ -131,7 +127,7 @@
 			);
 			mainGroup = FE6D2C4227FF54670056FA7E;
 			packageReferences = (
-				FE59DCF02810ED94004F774C /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */,
+				FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */,
 			);
 			productRefGroup = FE6D2C4C27FF54670056FA7E /* Products */;
 			projectDirPath = "";
@@ -165,13 +161,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		FE3410F8280F6204005AF354 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = FE3410F7280F6204005AF354 /* MissingArtworkUI */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		FE6D2C5827FF54680056FA7E /* Debug */ = {
@@ -363,7 +352,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FE59DCF02810ED94004F774C /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */ = {
+		FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bolsinga/itunes_missing_artwork";
 			requirement = {
@@ -374,18 +363,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FE3410F7280F6204005AF354 /* MissingArtworkUI */ = {
+		FE95DA47281216E1009B0209 /* MissingArtwork */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MissingArtworkUI;
-		};
-		FE3410F9280F620A005AF354 /* MissingArtworkUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MissingArtworkUI;
-		};
-		FE59DCF12810ED94004F774C /* MissingArtworkUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FE59DCF02810ED94004F774C /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */;
-			productName = MissingArtworkUI;
+			package = FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */;
+			productName = MissingArtwork;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
