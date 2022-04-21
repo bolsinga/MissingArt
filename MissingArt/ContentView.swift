@@ -6,7 +6,6 @@
 //
 
 import MissingArtwork
-import MissingArtworkUI
 import SwiftUI
 
 struct ContentView: View {
