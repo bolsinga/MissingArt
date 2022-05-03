@@ -10,11 +10,11 @@ import SwiftUI
 
 @main
 struct MissingArtApp: App {
-  private var model = Model()
+  private let model = Model()
 
   var body: some Scene {
     WindowGroup {
-      ContentView(missingArtworks: model.missingArtworks)
+      ContentView(model: model)
     }
   }
 }

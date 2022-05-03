@@ -9,19 +9,19 @@ import MissingArtwork
 import SwiftUI
 
 struct ContentView: View {
-  let missingArtworks: [MissingArtwork]
+  let model: Model
 
   var body: some View {
-    DescriptionList(missingArtworks: missingArtworks)
+    DescriptionList(missingArtworks: model.missingArtworks)
   }
 }
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    let missingArtworks = [
+    let model = Model(missingArtworks: [
       MissingArtwork.ArtistAlbum("The Stooges", "Fun House"),
       .CompilationAlbum("Beleza Tropical: Brazil Classics 1"),
-    ]
-    ContentView(missingArtworks: missingArtworks)
+    ])
+    ContentView(model: model)
   }
 }
