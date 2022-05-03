@@ -12,9 +12,17 @@ import SwiftUI
 struct MissingArtApp: App {
   private let model = Model()
 
+  @StateObject private var parts = TokenParts()
+
   var body: some Scene {
     WindowGroup {
       ContentView(model: model)
+        .sheet(isPresented: $parts.invalid) {
+          DeveloperToken(parts: parts)
+        }
+    }
+    Settings {
+      DeveloperToken(parts: parts)
     }
   }
 }
