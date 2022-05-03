@@ -10,16 +10,11 @@ import SwiftUI
 
 @main
 struct MissingArtApp: App {
-  var missingArtworks: [MissingArtwork] {
-    do {
-      return Array(Set<MissingArtwork>(try MissingArtwork.gatherMissingArtwork()))
-    } catch {
-      return []
-    }
-  }
+  private var model = Model()
+
   var body: some Scene {
     WindowGroup {
-      ContentView(missingArtworks: missingArtworks)
+      ContentView(missingArtworks: model.missingArtworks)
     }
   }
 }
