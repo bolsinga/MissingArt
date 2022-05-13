@@ -9,11 +9,10 @@ import MissingArtwork
 import SwiftUI
 
 struct ContentView: View {
-  let model: Model
   let token: String
 
   var body: some View {
-    DescriptionList(missingArtworks: model.missingArtworks)
+    DescriptionList()
   }
 }
 
@@ -23,6 +22,7 @@ struct ContentView_Previews: PreviewProvider {
       MissingArtwork.ArtistAlbum("The Stooges", "Fun House"),
       .CompilationAlbum("Beleza Tropical: Brazil Classics 1"),
     ])
-    ContentView(model: model, token: "")
+    ContentView(token: "")
+      .environmentObject(model)
   }
 }
