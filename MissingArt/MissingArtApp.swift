@@ -16,13 +16,10 @@ struct MissingArtApp: App {
 
   var body: some Scene {
     WindowGroup {
-      ContentView(model: model)
+      ContentView(model: model, token: parts.token ?? "")
         .sheet(isPresented: $parts.invalid) {
           DeveloperToken(parts: parts)
         }
-    }
-    Settings {
-      DeveloperToken(parts: parts)
     }
   }
 }
