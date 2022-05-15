@@ -17,7 +17,7 @@ struct MissingArtApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView(token: parts.token ?? "")
-        .sheet(isPresented: $parts.invalid) {
+        .sheet(isPresented: $parts.requiresTokenRefresh) {
           DeveloperToken(parts: parts)
         }
         .environmentObject(model)

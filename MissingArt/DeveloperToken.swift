@@ -51,10 +51,10 @@ struct DeveloperToken: View {
             showFileImporter.toggle()
           },
           label: {
-            let hasChosenFile = parts.isP8Valid
+            let hasP8Data = parts.hasP8Data
             Label(
-              hasChosenFile ? "Update" : "Choose",
-              systemImage: hasChosenFile ? "doc.badge.gearshape" : "doc.badge.plus")
+              hasP8Data ? "Update" : "Choose",
+              systemImage: hasP8Data ? "doc.badge.gearshape" : "doc.badge.plus")
           })
       }
     }
@@ -66,8 +66,8 @@ struct DeveloperToken: View {
       allowedContentTypes: [UTType(filenameExtension: "p8", conformingTo: .data)!]
     ) { result in
       do {
-        parts.p8 = try result.get()
-        parts.validate()
+        let url = try result.get()
+        parts.save(p8URL: url)
       } catch {
         fatalError("Unable to read p8 file")
       }
