@@ -12,7 +12,7 @@ import SwiftUI
 class TokenParts: ObservableObject {
   @AppStorage("dev.key") var key: String?
   @AppStorage("dev.team") var team: String?
-  @AppStorage("dev.token") var token: String?
+  @Published var token: String?
 
   var p8: URL?
 
