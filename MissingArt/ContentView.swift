@@ -18,11 +18,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    let model = Model(missingArtworks: [
-      MissingArtwork.ArtistAlbum("The Stooges", "Fun House"),
-      .CompilationAlbum("Beleza Tropical: Brazil Classics 1"),
-    ])
     ContentView(token: "")
-      .environmentObject(model)
+      .environmentObject(Model.preview)
   }
 }
