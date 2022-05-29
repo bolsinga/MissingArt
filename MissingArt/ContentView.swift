@@ -12,7 +12,7 @@ struct ContentView: View {
   let token: String
 
   var body: some View {
-    DescriptionList(token: token)
+    MissingArtworkView(token: token)
   }
 }
 
