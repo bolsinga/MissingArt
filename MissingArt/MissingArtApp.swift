@@ -10,8 +10,6 @@ import SwiftUI
 
 @main
 struct MissingArtApp: App {
-  @StateObject private var model = Model()
-
   @StateObject private var parts = TokenParts()
 
   var body: some Scene {
@@ -20,7 +18,6 @@ struct MissingArtApp: App {
         .sheet(isPresented: $parts.requiresTokenRefresh) {
           DeveloperToken(parts: parts)
         }
-        .environmentObject(model)
     }
   }
 }
