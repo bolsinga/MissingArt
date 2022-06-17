@@ -9,15 +9,13 @@ import MissingArtwork
 import SwiftUI
 
 struct ContentView: View {
-  let token: String
-
   var body: some View {
-    MissingArtworkView(token: token)
+    MissingArtworkView()
   }
 }
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    ContentView(token: "")
+    ContentView()
   }
 }
