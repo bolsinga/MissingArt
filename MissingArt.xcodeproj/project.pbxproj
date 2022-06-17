@@ -128,7 +128,6 @@
 			mainGroup = FE6D2C4227FF54670056FA7E;
 			packageReferences = (
 				FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */,
-				FE5AB6132821939B00CD6E0D /* XCRemoteSwiftPackageReference "CupertinoJWT" */,
 			);
 			productRefGroup = FE6D2C4C27FF54670056FA7E /* Products */;
 			projectDirPath = "";
@@ -357,14 +356,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FE5AB6132821939B00CD6E0D /* XCRemoteSwiftPackageReference "CupertinoJWT" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/terwanerik/CupertinoJWT";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bolsinga/itunes_missing_artwork";
