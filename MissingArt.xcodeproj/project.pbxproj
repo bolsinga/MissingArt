@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */; };
-		FE6D2C5127FF54670056FA7E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D2C5027FF54670056FA7E /* ContentView.swift */; };
 		FE6D2C5327FF54680056FA7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5227FF54680056FA7E /* Assets.xcassets */; };
 		FE6D2C5627FF54680056FA7E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5527FF54680056FA7E /* Preview Assets.xcassets */; };
 		FE95DA48281216E1009B0209 /* MissingArtwork in Frameworks */ = {isa = PBXBuildFile; productRef = FE95DA47281216E1009B0209 /* MissingArtwork */; };
@@ -17,7 +16,6 @@
 /* Begin PBXFileReference section */
 		FE6D2C4B27FF54670056FA7E /* MissingArt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MissingArt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingArtApp.swift; sourceTree = "<group>"; };
-		FE6D2C5027FF54670056FA7E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FE6D2C5227FF54680056FA7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE6D2C5527FF54680056FA7E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FE6D2C5727FF54680056FA7E /* MissingArt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MissingArt.entitlements; sourceTree = "<group>"; };
@@ -56,7 +54,6 @@
 			isa = PBXGroup;
 			children = (
 				FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */,
-				FE6D2C5027FF54670056FA7E /* ContentView.swift */,
 				FE6D2C5227FF54680056FA7E /* Assets.xcassets */,
 				FE6D2C5727FF54680056FA7E /* MissingArt.entitlements */,
 				FE6D2C5427FF54680056FA7E /* Preview Content */,
@@ -155,7 +152,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE6D2C5127FF54670056FA7E /* ContentView.swift in Sources */,
 				FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

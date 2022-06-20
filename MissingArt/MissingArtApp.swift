@@ -12,7 +12,7 @@ import SwiftUI
 struct MissingArtApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView()
+      MissingArtworkView()
     }
   }
 }
