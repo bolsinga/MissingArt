@@ -33,7 +33,7 @@ extension MissingArtwork {
     "verify_track_\(String(simpleRepresentation.compactMap{ $0.isLetter || $0.isNumber ? $0 : "_" }).folding(options: .diacriticInsensitive, locale: .current))"
   }
 
-  fileprivate var appleScriptCodeToFixPartialArtworkDefinition: String {
+  fileprivate var appleScriptCodeToFixArtworkDefinition: String {
     let appleScriptVerifyTrackFunctionName = appleScriptVerifyTrackFunctionName
     return """
           on \(appleScriptVerifyTrackFunctionName)(trk)
@@ -47,10 +47,14 @@ extension MissingArtwork {
       """
   }
 
-  fileprivate var appleScriptCodeToFixPartialArtworkCall: String {
+  fileprivate func appleScriptCodeToFixArtworkCall(_ findImageHandler: String) -> String {
     return """
-          fixAlbumArtwork(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerifyTrackFunctionName), findPartialImage)
+          fixAlbumArtwork(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerifyTrackFunctionName), \(findImageHandler))
       """
+  }
+
+  fileprivate var appleScriptCodeToFixPartialArtworkCall: String {
+    return appleScriptCodeToFixArtworkCall("findPartialImage")
   }
 }
 
@@ -103,7 +107,7 @@ struct MissingArtApp: App {
   @State private var fixArtError: FixArtError?
   @State private var showUnableToFixPartialArt: Bool = false
 
-  let appleScriptFixPartialAlbumFunctionDefinition = """
+  private let appleScriptFixAlbumArtFunctionDefinition = """
     on findPartialImage(results)
       set imageData to missing value
       repeat with trk in results
@@ -174,19 +178,21 @@ struct MissingArtApp: App {
 
     """
 
-  private func partialArtworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
+  private func _artworksAppleScript(
+    _ missingArtworks: [MissingArtwork], caller: ((MissingArtwork) -> String)
+  ) -> String {
     var appleScript = """
-      \(appleScriptFixPartialAlbumFunctionDefinition)
+      \(appleScriptFixAlbumArtFunctionDefinition)
 
       """
     var calls = ""
     for missingArtwork in missingArtworks {
-      appleScript.append(missingArtwork.appleScriptCodeToFixPartialArtworkDefinition)
+      appleScript.append(missingArtwork.appleScriptCodeToFixArtworkDefinition)
 
       calls.append(
         """
         try
-          \(missingArtwork.appleScriptCodeToFixPartialArtworkCall)
+          \(caller(missingArtwork))
         on error errorString
           log \"Error Trying to Fix Artwork: \" & errorString
         end try
@@ -199,6 +205,12 @@ struct MissingArtApp: App {
       return true
       """)
     return appleScript
+  }
+
+  private func partialArtworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
+    return _artworksAppleScript(missingArtworks) { missingArtwork in
+      missingArtwork.appleScriptCodeToFixPartialArtworkCall
+    }
   }
 
   private func copyPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
