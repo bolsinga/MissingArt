@@ -240,8 +240,14 @@ struct MissingArtApp: App {
     WindowGroup {
       MissingArtworkView(imageContextMenuBuilder: {
         (missingImages: [MissingArtworkView.MissingImage]) in
-        if missingImages.count != 1 {
-          Text("Multiple Items Not Yet Supported.")
+        if missingImages.count > 1 {
+          Button("Copy Multiple Partial Art AppleScript") {
+            let appleScript = partialArtworksAppleScript(missingImages.filter { $0.availability == .some }.map { $0.missingArtwork })
+
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(appleScript, forType: .string)
+          }
         } else {
           if let missingImage = missingImages.first {
             switch missingImage.availability {
