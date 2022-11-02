@@ -14,11 +14,13 @@ struct MissingArtApp: App {
     WindowGroup {
       MissingArtworkView { missingArtwork in
         Button("Copy Partial Art AppleScript") {
-          let searchStringRepresentation = "\(missingArtwork.simpleRepresentation)".replacingOccurrences(of: "\"", with: "\\\"")
-          var trackTest : String
+          let searchStringRepresentation = "\(missingArtwork.simpleRepresentation)"
+            .replacingOccurrences(of: "\"", with: "\\\"")
+          var trackTest: String
           switch missingArtwork {
           case .ArtistAlbum(let artist, let album):
-            trackTest = "album of trk is equal to \"\(album)\" and artist of trk is equal to \"\(artist)\" then"
+            trackTest =
+              "album of trk is equal to \"\(album)\" and artist of trk is equal to \"\(artist)\" then"
           case .CompilationAlbum(let album):
             trackTest = "album of trk is equal to \"\(album)\" then"
           }
