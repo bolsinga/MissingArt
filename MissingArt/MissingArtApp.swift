@@ -48,8 +48,41 @@ extension MissingArtwork {
   }
 }
 
+struct FixArtError: LocalizedError {
+  let message: String
+
+  init(nsDictionary: NSDictionary) {
+    let message = nsDictionary["NSAppleScriptErrorMessage"] as? String
+    if let message = message {
+      self.message = message
+    } else {
+      self.message = "Unknown Error"
+    }
+  }
+
+  init(message: String) {
+    self.message = message
+  }
+
+  var errorDescription: String? {
+    message
+  }
+
+  var failureReason: String? {
+    message
+  }
+
+  var recoverySuggestion: String? {
+    "Try running as an AppleScript."
+  }
+}
+
 @main
 struct MissingArtApp: App {
+
+  @State private var fixArtError: FixArtError?
+  @State private var showUnableToFixPartialArt: Bool = false
+
   let appleScriptFixPartialAlbumFunctionDefinition = """
     on fixPartialAlbum(searchString, uncallableTrackTest)
       global trackTest
@@ -94,20 +127,47 @@ struct MissingArtApp: App {
       end repeat
     end fixPartialAlbum
     """
+
+  private func partialArtworkAppleScript(_ missingArtwork: MissingArtwork) -> String {
+    return """
+      \(appleScriptFixPartialAlbumFunctionDefinition)
+      \(missingArtwork.appleScriptCodeToFixPartialArtwork)
+      return true
+      """
+  }
+
   var body: some Scene {
     WindowGroup {
       MissingArtworkView(
         partialImageContextMenuBuilder: { missingArtwork in
           Button("Copy Partial Art AppleScript") {
-            let appleScript = """
-              \(appleScriptFixPartialAlbumFunctionDefinition)
-              \(missingArtwork.appleScriptCodeToFixPartialArtwork)
-              """
+            let appleScript = partialArtworkAppleScript(missingArtwork)
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
             pasteboard.setString(appleScript, forType: .string)
           }
-        })
+          Button("Fix Partial Art") {
+            let exec = NSAppleScript(source: partialArtworkAppleScript(missingArtwork))
+            if let exec = exec {
+              var errorDictionary: NSDictionary?
+              _ = exec.executeAndReturnError(&errorDictionary)
+              if let errorDictionary = errorDictionary {
+                fixArtError = FixArtError(nsDictionary: errorDictionary)
+                showUnableToFixPartialArt = true
+              }
+            } else {
+              fixArtError = FixArtError(message: "Unable to change Music artwork image.")
+              showUnableToFixPartialArt = true
+            }
+          }
+        }).alert(
+          isPresented: $showUnableToFixPartialArt, error: fixArtError,
+          actions: { error in
+            Button("OK") {
+              showUnableToFixPartialArt = false
+            }
+          }, message: { error in Text("The partial artwork was not able to be fixed. Try running as an AppleScript.") }
+        )
     }
   }
 }
