@@ -30,7 +30,7 @@ extension MissingArtwork {
   }
 
   private var appleScriptVerifyTrackFunctionName: String {
-    "verify_track_\(String(simpleRepresentation.compactMap{ $0.isLetter || $0.isNumber ? $0 : "_" }))"
+    "verify_track_\(String(simpleRepresentation.compactMap{ $0.isLetter || $0.isNumber ? $0 : "_" }).folding(options: .diacriticInsensitive, locale: .current))"
   }
 
   var appleScriptCodeToFixPartialArtwork: String {
