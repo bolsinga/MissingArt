@@ -8,18 +8,24 @@
 import MissingArtwork
 import SwiftUI
 
+extension String {
+  var escapeQuotes: String {
+    self.replacingOccurrences(of: "\"", with: "\\\"")
+  }
+}
+
 extension MissingArtwork {
   private var appleScriptSearchRepresentation: String {
-    "\(simpleRepresentation)".replacingOccurrences(of: "\"", with: "\\\"")
+    "\(simpleRepresentation)".escapeQuotes
   }
 
   private var appleScriptVerifyTrackMatch: String {
     switch self {
     case .ArtistAlbum(let artist, let album):
       return
-        "album of trk is equal to \"\(album)\" and artist of trk is equal to \"\(artist)\""
+        "album of trk is equal to \"\(album.escapeQuotes)\" and artist of trk is equal to \"\(artist.escapeQuotes)\""
     case .CompilationAlbum(let album):
-      return "album of trk is equal to \"\(album)\""
+      return "album of trk is equal to \"\(album.escapeQuotes)\""
     }
   }
 
