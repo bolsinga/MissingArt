@@ -107,10 +107,6 @@ struct MissingArtApp: App {
             pasteboard.clearContents()
             pasteboard.setString(appleScript, forType: .string)
           }
-          Button("Another") {
-            print("cool")
-
-          }
         })
     }
   }
