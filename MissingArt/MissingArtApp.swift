@@ -52,7 +52,7 @@ struct FixArtError: LocalizedError {
   let message: String
 
   init(nsDictionary: NSDictionary) {
-    let message = nsDictionary["NSAppleScriptErrorMessage"] as? String
+    let message = nsDictionary[NSAppleScript.errorMessage] as? String
     if let message = message {
       self.message = message
     } else {
