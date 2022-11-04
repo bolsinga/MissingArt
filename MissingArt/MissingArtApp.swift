@@ -96,17 +96,18 @@ struct MissingArtApp: App {
     """
   var body: some Scene {
     WindowGroup {
-      MissingArtworkView { missingArtwork in
-        Button("Copy Partial Art AppleScript") {
-          let appleScript = """
-            \(appleScriptFixPartialAlbumFunctionDefinition)
-            \(missingArtwork.appleScriptCodeToFixPartialArtwork)
-            """
-          let pasteboard = NSPasteboard.general
-          pasteboard.clearContents()
-          pasteboard.setString(appleScript, forType: .string)
-        }
-      }
+      MissingArtworkView(
+        partialImageContextMenuBuilder: { missingArtwork in
+          Button("Copy Partial Art AppleScript") {
+            let appleScript = """
+              \(appleScriptFixPartialAlbumFunctionDefinition)
+              \(missingArtwork.appleScriptCodeToFixPartialArtwork)
+              """
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(appleScript, forType: .string)
+          }
+        })
     }
   }
 }
