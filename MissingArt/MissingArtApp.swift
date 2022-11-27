@@ -164,10 +164,18 @@ struct MissingArtApp: App {
 
   var body: some Scene {
     WindowGroup {
-      MissingArtworkView(imageContextMenuBuilder: { missingArtwork, availability in
+      MissingArtworkView(imageContextMenuBuilder: { missingArtwork, availability, image in
         switch availability {
         case .none:
-          Text("Missing Artwork")
+          if let image = image {
+            Button("Copy Artwork Image") {
+              let pasteboard = NSPasteboard.general
+              pasteboard.clearContents()
+              pasteboard.writeObjects([image])
+            }
+          } else {
+            Text("No Image Selected")
+          }
         case .some:
           copyPartialArtButton(missingArtwork)
           fixPartialArtButton(missingArtwork)
