@@ -164,9 +164,16 @@ struct MissingArtApp: App {
 
   var body: some Scene {
     WindowGroup {
-      MissingArtworkView(imageContextMenuBuilder: { missingArtwork in
-        copyPartialArtButton(missingArtwork)
-        fixPartialArtButton(missingArtwork)
+      MissingArtworkView(imageContextMenuBuilder: { missingArtwork, availability in
+        switch availability {
+        case .none:
+          Text("Missing Artwork")
+        case .some:
+          copyPartialArtButton(missingArtwork)
+          fixPartialArtButton(missingArtwork)
+        case .unknown:
+          Text("Unknown Artwork Issue")
+        }
       }).alert(
         isPresented: $showUnableToFixPartialArt, error: fixArtError,
         actions: { error in
