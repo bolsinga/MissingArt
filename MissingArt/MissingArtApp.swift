@@ -164,10 +164,10 @@ struct MissingArtApp: App {
 
   var body: some Scene {
     WindowGroup {
-      MissingArtworkView { missingArtwork in
+      MissingArtworkView(imageContextMenuBuilder: { missingArtwork in
         copyPartialArtButton(missingArtwork)
         fixPartialArtButton(missingArtwork)
-      }.alert(
+      }).alert(
         isPresented: $showUnableToFixPartialArt, error: fixArtError,
         actions: { error in
           Button("OK") {
