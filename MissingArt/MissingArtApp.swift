@@ -145,20 +145,30 @@ struct MissingArtApp: App {
     }
   }
 
-  private func fixPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
-    Button("Fix Partial Art") {
-      let exec = NSAppleScript(source: partialArtworkAppleScript(missingArtwork))
-      if let exec = exec {
-        var errorDictionary: NSDictionary?
-        _ = exec.executeAndReturnError(&errorDictionary)
-        if let errorDictionary = errorDictionary {
-          fixArtError = FixArtError(nsDictionary: errorDictionary)
-          showUnableToFixPartialArt = true
-        }
-      } else {
-        fixArtError = FixArtError(message: "Unable to change Music artwork image.")
+  private func fixPartialArtwork(_ missingArtwork: MissingArtwork) {
+    var error: FixArtError?
+    defer {
+      if let error = error {
+        fixArtError = error
         showUnableToFixPartialArt = true
       }
+    }
+
+    let exec = NSAppleScript(source: partialArtworkAppleScript(missingArtwork))
+    if let exec = exec {
+      var errorDictionary: NSDictionary?
+      _ = exec.executeAndReturnError(&errorDictionary)
+      if let errorDictionary = errorDictionary {
+        error = FixArtError(nsDictionary: errorDictionary)
+      }
+    } else {
+      error = FixArtError(message: "Unable to change Music artwork image.")
+    }
+  }
+
+  private func fixPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
+    Button("Fix Partial Art") {
+      fixPartialArtwork(missingArtwork)
     }
   }
 
