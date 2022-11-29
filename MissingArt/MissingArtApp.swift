@@ -52,6 +52,7 @@ enum FixArtError: Error {
   case appleScriptCannotExec
   case appleScriptFailure(String)
   case appleScriptIssue
+  case unknownError(Error)
 }
 
 extension FixArtError {
@@ -72,6 +73,8 @@ extension FixArtError: CustomStringConvertible {
       return description
     case .appleScriptIssue:
       return "Unable to change Music artwork image. AppleScript does not have an identifiable error."
+    case .unknownError(let error):
+      return "Unable to change Music artwork image. Unknown error: \(String(describing: error))."
     }
   }
 }
@@ -150,30 +153,30 @@ struct MissingArtApp: App {
     }
   }
 
-  private func fixPartialArtwork(_ missingArtwork: MissingArtwork) {
-    var error: FixArtError?
-    defer {
-      if let error = error {
-        fixArtError = error
-        showUnableToFixPartialArt = true
-      }
-    }
-
+  private func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
     let exec = NSAppleScript(source: partialArtworkAppleScript(missingArtwork))
     if let exec = exec {
       var errorDictionary: NSDictionary?
       _ = exec.executeAndReturnError(&errorDictionary)
       if let errorDictionary = errorDictionary {
-        error = FixArtError.createAppleScriptError(nsDictionary: errorDictionary)
+        throw FixArtError.createAppleScriptError(nsDictionary: errorDictionary)
       }
     } else {
-      error = FixArtError.appleScriptCannotExec
+      throw FixArtError.appleScriptCannotExec
     }
   }
 
   private func fixPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Fix Partial Art") {
-      fixPartialArtwork(missingArtwork)
+      do {
+        try fixPartialArtwork(missingArtwork)
+      } catch let error as FixArtError {
+        fixArtError = error
+        showUnableToFixPartialArt = true
+      } catch {
+        fixArtError = .unknownError(error)
+        showUnableToFixPartialArt = true
+      }
     }
   }
 
