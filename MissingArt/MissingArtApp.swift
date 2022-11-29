@@ -154,6 +154,11 @@ struct MissingArtApp: App {
     }
   }
 
+  @MainActor private func reportError(_ error: FixArtError) {
+    fixArtError = error
+    showUnableToFixPartialArt = true
+  }
+
   private func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
     let exec = NSAppleScript(source: partialArtworkAppleScript(missingArtwork))
     if let exec = exec {
@@ -169,14 +174,14 @@ struct MissingArtApp: App {
 
   private func fixPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Fix Partial Art") {
-      do {
-        try fixPartialArtwork(missingArtwork)
-      } catch let error as FixArtError {
-        fixArtError = error
-        showUnableToFixPartialArt = true
-      } catch {
-        fixArtError = .unknownError(error)
-        showUnableToFixPartialArt = true
+      Task {
+        do {
+          try fixPartialArtwork(missingArtwork)
+        } catch let error as FixArtError {
+          await reportError(error)
+        } catch {
+          await reportError(.unknownError(error))
+        }
       }
     }
   }
