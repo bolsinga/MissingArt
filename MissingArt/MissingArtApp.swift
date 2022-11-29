@@ -49,34 +49,37 @@ extension MissingArtwork {
 }
 
 enum FixArtError: Error {
-  case appleScriptCannotExec
-  case appleScriptFailure(String)
-  case appleScriptIssue
-  case unknownError(Error)
+  case appleScriptCannotExec(MissingArtwork)
+  case appleScriptFailure(MissingArtwork, String)
+  case appleScriptIssue(MissingArtwork)
+  case unknownError(MissingArtwork, Error)
 }
 
 extension FixArtError {
-  static func createAppleScriptError(nsDictionary: NSDictionary) -> FixArtError {
+  static func createAppleScriptError(missingArtwork: MissingArtwork, nsDictionary: NSDictionary)
+    -> FixArtError
+  {
     if let message = nsDictionary[NSAppleScript.errorMessage] as? String {
-      return .appleScriptFailure(message)
+      return .appleScriptFailure(missingArtwork, message)
     }
-    return .appleScriptIssue
+    return .appleScriptIssue(missingArtwork)
   }
 }
 
 extension FixArtError: CustomStringConvertible {
   var description: String {
+    var detail: String
     switch self {
-    case .appleScriptCannotExec:
-      return "Unable to change Music artwork image. Cannot execute AppleScript."
-    case .appleScriptFailure(let description):
-      return description
-    case .appleScriptIssue:
-      return
-        "Unable to change Music artwork image. AppleScript does not have an identifiable error."
-    case .unknownError(let error):
-      return "Unable to change Music artwork image. Unknown error: \(String(describing: error))."
+    case .appleScriptCannotExec(let missingArtwork):
+      detail = "\(missingArtwork.description). Cannot execute AppleScript."
+    case .appleScriptFailure(let missingArtwork, let description):
+      detail = "\(missingArtwork.description) \(description)"
+    case .appleScriptIssue(let missingArtwork):
+      detail = "\(missingArtwork.description). AppleScript does not have an identifiable error."
+    case .unknownError(let missingArtwork, let error):
+      detail = "\(missingArtwork.description). Unknown error: \(String(describing: error))."
     }
+    return "Unable to change Music artwork image for \(detail)"
   }
 }
 
@@ -165,10 +168,11 @@ struct MissingArtApp: App {
       var errorDictionary: NSDictionary?
       _ = exec.executeAndReturnError(&errorDictionary)
       if let errorDictionary = errorDictionary {
-        throw FixArtError.createAppleScriptError(nsDictionary: errorDictionary)
+        throw FixArtError.createAppleScriptError(
+          missingArtwork: missingArtwork, nsDictionary: errorDictionary)
       }
     } else {
-      throw FixArtError.appleScriptCannotExec
+      throw FixArtError.appleScriptCannotExec(missingArtwork)
     }
   }
 
@@ -180,7 +184,7 @@ struct MissingArtApp: App {
         } catch let error as FixArtError {
           await reportError(error)
         } catch {
-          await reportError(.unknownError(error))
+          await reportError(.unknownError(missingArtwork, error))
         }
       }
     }
