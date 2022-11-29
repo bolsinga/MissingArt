@@ -72,14 +72,15 @@ extension FixArtError: CustomStringConvertible {
     case .appleScriptFailure(let description):
       return description
     case .appleScriptIssue:
-      return "Unable to change Music artwork image. AppleScript does not have an identifiable error."
+      return
+        "Unable to change Music artwork image. AppleScript does not have an identifiable error."
     case .unknownError(let error):
       return "Unable to change Music artwork image. Unknown error: \(String(describing: error))."
     }
   }
 }
 
-extension FixArtError : LocalizedError {
+extension FixArtError: LocalizedError {
   var errorDescription: String? {
     return self.description
   }
