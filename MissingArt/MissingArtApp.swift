@@ -48,32 +48,37 @@ extension MissingArtwork {
   }
 }
 
-struct FixArtError: LocalizedError {
-  let message: String
+enum FixArtError: Error {
+  case appleScriptCannotExec
+  case appleScriptFailure(String)
+  case appleScriptIssue
+}
 
-  init(nsDictionary: NSDictionary) {
-    let message = nsDictionary[NSAppleScript.errorMessage] as? String
-    if let message = message {
-      self.message = message
-    } else {
-      self.message = "Unknown Error"
+extension FixArtError {
+  static func createAppleScriptError(nsDictionary: NSDictionary) -> FixArtError {
+    if let message = nsDictionary[NSAppleScript.errorMessage] as? String {
+      return .appleScriptFailure(message)
+    }
+    return .appleScriptIssue
+  }
+}
+
+extension FixArtError: CustomStringConvertible {
+  var description: String {
+    switch self {
+    case .appleScriptCannotExec:
+      return "Unable to change Music artwork image. Cannot execute AppleScript."
+    case .appleScriptFailure(let description):
+      return description
+    case .appleScriptIssue:
+      return "Unable to change Music artwork image. AppleScript does not have an identifiable error."
     }
   }
+}
 
-  init(message: String) {
-    self.message = message
-  }
-
+extension FixArtError : LocalizedError {
   var errorDescription: String? {
-    message
-  }
-
-  var failureReason: String? {
-    message
-  }
-
-  var recoverySuggestion: String? {
-    "Try running as an AppleScript."
+    return self.description
   }
 }
 
@@ -159,10 +164,10 @@ struct MissingArtApp: App {
       var errorDictionary: NSDictionary?
       _ = exec.executeAndReturnError(&errorDictionary)
       if let errorDictionary = errorDictionary {
-        error = FixArtError(nsDictionary: errorDictionary)
+        error = FixArtError.createAppleScriptError(nsDictionary: errorDictionary)
       }
     } else {
-      error = FixArtError(message: "Unable to change Music artwork image.")
+      error = FixArtError.appleScriptCannotExec
     }
   }
 
