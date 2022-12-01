@@ -136,8 +136,7 @@ struct MissingArtApp: App {
         end tell
         if artwrk is missing value then
           log "no artwork for " & name of trk
-        end if
-        if artwrk is not missing value then
+        else
           tell application "Music"
             set raw data of artwrk to imageData
           end tell
