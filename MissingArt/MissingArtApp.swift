@@ -43,7 +43,7 @@ extension MissingArtwork {
           end tell
           return matches
           end \(appleScriptVerifyTrackFunctionName)
-          fixPartialAlbum(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerifyTrackFunctionName))
+          fixAlbumArtwork(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerifyTrackFunctionName), findPartialImage)
       """
   }
 }
@@ -96,18 +96,7 @@ struct MissingArtApp: App {
   @State private var showUnableToFixPartialArt: Bool = false
 
   let appleScriptFixPartialAlbumFunctionDefinition = """
-    on fixPartialAlbum(searchString, uncallableTrackTest)
-      global trackTest
-      set trackTest to uncallableTrackTest
-      tell application "Music"
-        set unfilteredResults to search the first library playlist for searchString
-      end tell
-      set results to {}
-      repeat with trk in unfilteredResults
-        if trackTest(trk) then
-          set the end of results to trk
-        end if
-      end repeat
+    on findPartialImage(results)
       set imageData to missing value
       repeat with trk in results
         tell application "Music"
@@ -118,6 +107,23 @@ struct MissingArtApp: App {
           end if
         end tell
       end repeat
+      return imageData
+    end findPartialImage
+    on fixAlbumArtwork(searchString, uncallableTrackTest, uncallableFindImageHandler)
+      global trackTest
+      set trackTest to uncallableTrackTest
+      global findImageHandler
+      set findImageHandler to uncallableFindImageHandler
+      tell application "Music"
+        set unfilteredResults to search the first library playlist for searchString
+      end tell
+      set results to {}
+      repeat with trk in unfilteredResults
+        if trackTest(trk) then
+          set the end of results to trk
+        end if
+      end repeat
+      set imageData to findImageHandler(results)
       if imageData is missing value then
         log "cannot find artwork"
       end if
@@ -137,7 +143,7 @@ struct MissingArtApp: App {
           end tell
         end if
       end repeat
-    end fixPartialAlbum
+    end fixAlbumArtwork
     """
 
   private func partialArtworkAppleScript(_ missingArtwork: MissingArtwork) -> String {
