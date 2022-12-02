@@ -101,7 +101,7 @@ struct MissingArtApp: App {
       repeat with trk in results
         tell application "Music"
           if (count of artworks of trk) is not 0 then
-            set imageData to raw data of item 1 of artworks of trk
+            set imageData to data of item 1 of artworks of trk
             log "found artwork"
             exit repeat
           end if
@@ -138,7 +138,7 @@ struct MissingArtApp: App {
           log "no artwork for " & name of trk
         else
           tell application "Music"
-            set raw data of artwrk to imageData
+            set data of artwrk to imageData
           end tell
         end if
       end repeat
