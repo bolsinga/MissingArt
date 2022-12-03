@@ -125,7 +125,7 @@ struct MissingArtApp: App {
       end repeat
       set imageData to findImageHandler(results)
       if imageData is missing value then
-        log "cannot find artwork"
+        log "cannot find artwork for: " & searchString
       end if
       repeat with trk in results
         set artwrk to missing value
