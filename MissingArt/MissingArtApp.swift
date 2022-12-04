@@ -102,7 +102,6 @@ struct MissingArtApp: App {
         tell application "Music"
           if (count of artworks of trk) is not 0 then
             set imageData to data of item 1 of artworks of trk
-            log "found existing artwork for " & name of trk
             exit repeat
           end if
         end tell
@@ -115,7 +114,11 @@ struct MissingArtApp: App {
       global findImageHandler
       set findImageHandler to uncallableFindImageHandler
       tell application "Music"
-        set unfilteredResults to search the first library playlist for searchString
+        try
+          set unfilteredResults to search the first library playlist for searchString
+        on error errorString number errorNumber
+          error "Cannot find " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 501
+        end try
       end tell
       set results to {}
       repeat with trk in unfilteredResults
@@ -125,20 +128,30 @@ struct MissingArtApp: App {
       end repeat
       set imageData to findImageHandler(results)
       if imageData is missing value then
-        log "cannot find artwork for: " & searchString
+        set message to "Cannot find image data for " & searchString
+        error message number 502
       end if
       repeat with trk in results
         set artwrk to missing value
         tell application "Music"
-          if artworks of trk is not missing value then
-            set artwrk to item 1 of artworks of trk
-          end if
+          try
+            if artworks of trk is not missing value then
+              set artwrk to item 1 of artworks of trk
+            end if
+          on error errorString number errorNumber
+            error "Cannot get artwork for: " & name of trk & " (" & errorString & " " & (errorNumber as string) & ")" number 503
+          end try
         end tell
         if artwrk is missing value then
-          log "no artwork for " & name of trk
+          set message to "No artwork for " & name of trk
+          error message number 504
         else
           tell application "Music"
-            set data of artwrk to imageData
+            try
+              set data of artwrk to imageData
+            on error errorString number errorNumber
+              error "Cannot set artwork for: " & name of trk & " (" & errorString & " " & (errorNumber as string) & ")" number 505
+            end try
           end tell
         end if
       end repeat
