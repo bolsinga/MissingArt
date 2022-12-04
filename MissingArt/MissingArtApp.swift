@@ -102,7 +102,7 @@ struct MissingArtApp: App {
         tell application "Music"
           if (count of artworks of trk) is not 0 then
             set imageData to data of item 1 of artworks of trk
-            log "found artwork"
+            log "found existing artwork for " & name of trk
             exit repeat
           end if
         end tell
