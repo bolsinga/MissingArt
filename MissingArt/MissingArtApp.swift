@@ -43,6 +43,12 @@ extension MissingArtwork {
           end tell
           return matches
           end \(appleScriptVerifyTrackFunctionName)
+
+      """
+  }
+
+  var appleScriptCodeToFixPartialArtworkCall: String {
+    return """
           fixAlbumArtwork(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerifyTrackFunctionName), findPartialImage)
       """
   }
@@ -156,19 +162,39 @@ struct MissingArtApp: App {
         end if
       end repeat
     end fixAlbumArtwork
+
     """
 
-  private func partialArtworkAppleScript(_ missingArtwork: MissingArtwork) -> String {
-    return """
+  private func partialArtworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
+    var appleScript = """
       \(appleScriptFixPartialAlbumFunctionDefinition)
-      \(missingArtwork.appleScriptCodeToFixPartialArtwork)
-      return true
+
       """
+    var calls = ""
+    for missingArtwork in missingArtworks {
+      appleScript.append(missingArtwork.appleScriptCodeToFixPartialArtworkDefinition)
+
+      calls.append(
+        """
+        try
+          \(missingArtwork.appleScriptCodeToFixPartialArtworkCall)
+        on error errorString
+          log \"Error Trying to Fix Artwork: \" & errorString
+        end try
+
+        """)
+    }
+    appleScript.append(calls)
+    appleScript.append(
+      """
+      return true
+      """)
+    return appleScript
   }
 
   private func copyPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Copy Partial Art AppleScript") {
-      let appleScript = partialArtworkAppleScript(missingArtwork)
+      let appleScript = partialArtworksAppleScript([missingArtwork])
       let pasteboard = NSPasteboard.general
       pasteboard.clearContents()
       pasteboard.setString(appleScript, forType: .string)
@@ -181,7 +207,7 @@ struct MissingArtApp: App {
   }
 
   private func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
-    let exec = NSAppleScript(source: partialArtworkAppleScript(missingArtwork))
+    let exec = NSAppleScript(source: partialArtworksAppleScript([missingArtwork]))
     if let exec = exec {
       var errorDictionary: NSDictionary?
       _ = exec.executeAndReturnError(&errorDictionary)
