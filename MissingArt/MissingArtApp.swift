@@ -8,13 +8,13 @@
 import MissingArtwork
 import SwiftUI
 
-extension String {
+private extension String {
   var escapeQuotes: String {
     self.replacingOccurrences(of: "\"", with: "\\\"")
   }
 }
 
-extension MissingArtwork {
+private extension MissingArtwork {
   private var appleScriptSearchRepresentation: String {
     "\(simpleRepresentation)".escapeQuotes
   }
@@ -54,14 +54,14 @@ extension MissingArtwork {
   }
 }
 
-enum FixArtError: Error {
+private enum FixArtError: Error {
   case appleScriptCannotExec(MissingArtwork)
   case appleScriptFailure(MissingArtwork, String)
   case appleScriptIssue(MissingArtwork)
   case unknownError(MissingArtwork, Error)
 }
 
-extension FixArtError {
+private extension FixArtError {
   static func createAppleScriptError(missingArtwork: MissingArtwork, nsDictionary: NSDictionary)
     -> FixArtError
   {
