@@ -238,23 +238,30 @@ struct MissingArtApp: App {
 
   var body: some Scene {
     WindowGroup {
-      MissingArtworkView(imageContextMenuBuilder: { missingArtwork, availability, image in
-        switch availability {
-        case .none:
-          if let image = image {
-            Button("Copy Artwork Image") {
-              let pasteboard = NSPasteboard.general
-              pasteboard.clearContents()
-              pasteboard.writeObjects([image])
+      MissingArtworkView(imageContextMenuBuilder: {
+        (missingImages: [MissingArtworkView.MissingImage]) in
+        if missingImages.count != 1 {
+          Text("Multiple Items Not Yet Supported.")
+        } else {
+          if let missingImage = missingImages.first {
+            switch missingImage.availability {
+            case .none:
+              if let image = missingImage.image {
+                Button("Copy Artwork Image") {
+                  let pasteboard = NSPasteboard.general
+                  pasteboard.clearContents()
+                  pasteboard.writeObjects([image])
+                }
+              } else {
+                Text("No Image Selected")
+              }
+            case .some:
+              copyPartialArtButton(missingImage.missingArtwork)
+              fixPartialArtButton(missingImage.missingArtwork)
+            case .unknown:
+              Text("Unknown Artwork Issue")
             }
-          } else {
-            Text("No Image Selected")
           }
-        case .some:
-          copyPartialArtButton(missingArtwork)
-          fixPartialArtButton(missingArtwork)
-        case .unknown:
-          Text("Unknown Artwork Issue")
         }
       }).alert(
         isPresented: $showUnableToFixPartialArt, error: fixArtError,
