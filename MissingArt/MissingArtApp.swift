@@ -8,13 +8,13 @@
 import MissingArtwork
 import SwiftUI
 
-private extension String {
-  var escapeQuotes: String {
+extension String {
+  fileprivate var escapeQuotes: String {
     self.replacingOccurrences(of: "\"", with: "\\\"")
   }
 }
 
-private extension MissingArtwork {
+extension MissingArtwork {
   private var appleScriptSearchRepresentation: String {
     "\(simpleRepresentation)".escapeQuotes
   }
@@ -33,7 +33,7 @@ private extension MissingArtwork {
     "verify_track_\(String(simpleRepresentation.compactMap{ $0.isLetter || $0.isNumber ? $0 : "_" }).folding(options: .diacriticInsensitive, locale: .current))"
   }
 
-  var appleScriptCodeToFixPartialArtworkDefinition: String {
+  fileprivate var appleScriptCodeToFixPartialArtworkDefinition: String {
     let appleScriptVerifyTrackFunctionName = appleScriptVerifyTrackFunctionName
     return """
           on \(appleScriptVerifyTrackFunctionName)(trk)
@@ -47,7 +47,7 @@ private extension MissingArtwork {
       """
   }
 
-  var appleScriptCodeToFixPartialArtworkCall: String {
+  fileprivate var appleScriptCodeToFixPartialArtworkCall: String {
     return """
           fixAlbumArtwork(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerifyTrackFunctionName), findPartialImage)
       """
@@ -61,8 +61,10 @@ private enum FixArtError: Error {
   case unknownError(MissingArtwork, Error)
 }
 
-private extension FixArtError {
-  static func createAppleScriptError(missingArtwork: MissingArtwork, nsDictionary: NSDictionary)
+extension FixArtError {
+  fileprivate static func createAppleScriptError(
+    missingArtwork: MissingArtwork, nsDictionary: NSDictionary
+  )
     -> FixArtError
   {
     if let message = nsDictionary[NSAppleScript.errorMessage] as? String {
