@@ -242,7 +242,8 @@ struct MissingArtApp: App {
         (missingImages: [MissingArtworkView.MissingImage]) in
         if missingImages.count > 1 {
           Button("Copy Multiple Partial Art AppleScript") {
-            let appleScript = partialArtworksAppleScript(missingImages.filter { $0.availability == .some }.map { $0.missingArtwork })
+            let appleScript = partialArtworksAppleScript(
+              missingImages.filter { $0.availability == .some }.map { $0.missingArtwork })
 
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
