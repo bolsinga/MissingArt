@@ -144,35 +144,23 @@ struct MissingArtApp: App {
         error message number 502
       end if
       repeat with trk in results
-        set artwrk to missing value
         tell application "Music"
           try
             set artwrks to artworks of trk
             if artwrks is missing value then
-              error "Artworks is missing value." number 506
-            end if
-            if length of artwrks is 0 then
-              error "Artworks has no objects." number 507
-            end if
-            if artwrks is not missing value then
-              set artwrk to item 1 of artwrks
+              delete artworks of trk
+            else if length of artwrks is 0 then
+              delete artworks of trk
             end if
           on error errorString number errorNumber
-            error "Cannot get artwork for: " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 503
+            error "Cannot reset artwork for: " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 503
+          end try
+          try
+            set data of artwork 1 of trk to imageData
+          on error errorString number errorNumber
+            error "Cannot set artwork for: " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 504
           end try
         end tell
-        if artwrk is missing value then
-          set message to "No artwork for " & searchString
-          error message number 504
-        else
-          tell application "Music"
-            try
-              set data of artwrk to imageData
-            on error errorString number errorNumber
-              error "Cannot set artwork for: " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 505
-            end try
-          end tell
-        end if
       end repeat
     end fixAlbumArtwork
 
