@@ -19,37 +19,18 @@ extension MissingArtwork {
     "\(simpleRepresentation)".escapeQuotes
   }
 
-  private var appleScriptVerifyTrackMatch: String {
+  private var appleScriptVerificationParameters: String {
     switch self {
     case .ArtistAlbum(let artist, let album):
-      return
-        "album of trk is equal to \"\(album.escapeQuotes)\" and artist of trk is equal to \"\(artist.escapeQuotes)\""
+      return "\"\(album.escapeQuotes)\", \"\(artist.escapeQuotes)\""
     case .CompilationAlbum(let album):
-      return "album of trk is equal to \"\(album.escapeQuotes)\""
+      return "\"\(album.escapeQuotes)\", \"\""
     }
-  }
-
-  private var appleScriptVerifyTrackFunctionName: String {
-    "verify_track_\(String(simpleRepresentation.compactMap{ $0.isLetter || $0.isNumber ? $0 : "_" }).folding(options: .diacriticInsensitive, locale: .current))"
-  }
-
-  fileprivate var appleScriptCodeToFixArtworkDefinition: String {
-    let appleScriptVerifyTrackFunctionName = appleScriptVerifyTrackFunctionName
-    return """
-          on \(appleScriptVerifyTrackFunctionName)(trk)
-          set matches to false
-          tell application "Music"
-            set matches to \(appleScriptVerifyTrackMatch)
-          end tell
-          return matches
-          end \(appleScriptVerifyTrackFunctionName)
-
-      """
   }
 
   fileprivate func appleScriptCodeToFixArtworkCall(_ findImageHandler: String) -> String {
     return """
-          fixAlbumArtwork(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerifyTrackFunctionName), \(findImageHandler))
+          fixAlbumArtwork(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerificationParameters), \(findImageHandler))
       """
   }
 
@@ -131,9 +112,17 @@ struct MissingArtApp: App {
       end repeat
       return imageData
     end findPartialImage
-    on fixAlbumArtwork(searchString, uncallableTrackTest, uncallableFindImageHandler)
-      global trackTest
-      set trackTest to uncallableTrackTest
+    on verifyTrack(trk, albumString, artistString)
+      set matches to false
+      tell application "Music"
+        set matches to album of trk is equal to albumString
+        if matches is true and length of artistString is not 0 then
+          set matches to artist of trk is equal to artistString
+        end if
+      end tell
+      return matches
+    end verifyTrack
+    on fixAlbumArtwork(searchString, albumString, artistString, uncallableFindImageHandler)
       global findImageHandler
       set findImageHandler to uncallableFindImageHandler
       tell application "Music"
@@ -145,7 +134,7 @@ struct MissingArtApp: App {
       end tell
       set results to {}
       repeat with trk in unfilteredResults
-        if trackTest(trk) then
+        if verifyTrack(trk, albumString, artistString) then
           set the end of results to trk
         end if
       end repeat
@@ -184,11 +173,8 @@ struct MissingArtApp: App {
       \(appleScriptFixAlbumArtFunctionDefinition)
 
       """
-    var calls = ""
     for missingArtwork in missingArtworks {
-      appleScript.append(missingArtwork.appleScriptCodeToFixArtworkDefinition)
-
-      calls.append(
+      appleScript.append(
         """
         try
           \(caller(missingArtwork))
@@ -198,7 +184,6 @@ struct MissingArtApp: App {
 
         """)
     }
-    appleScript.append(calls)
     appleScript.append(
       """
       return true
