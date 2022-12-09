@@ -56,6 +56,10 @@ extension MissingArtwork {
   fileprivate var appleScriptCodeToFixPartialArtworkCall: String {
     return appleScriptCodeToFixArtworkCall("findPartialImage")
   }
+
+  fileprivate var appleScriptCodeToFixArtworkCall: String {
+    return appleScriptCodeToFixArtworkCall("clipboardImage")
+  }
 }
 
 private enum FixArtError: Error {
@@ -108,6 +112,13 @@ struct MissingArtApp: App {
   @State private var showUnableToFixPartialArt: Bool = false
 
   private let appleScriptFixAlbumArtFunctionDefinition = """
+    on clipboardImage(ignored)
+      set imageData to missing value
+      if ((clipboard info) as string) contains "«class PNGf»" then
+        set imageData to (the clipboard as «class PNGf»)
+      end if
+      return imageData
+    end clipboardImage
     on findPartialImage(results)
       set imageData to missing value
       repeat with trk in results
@@ -201,11 +212,28 @@ struct MissingArtApp: App {
     }
   }
 
+  private func artworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
+    return _artworksAppleScript(missingArtworks) { missingArtwork in
+      missingArtwork.appleScriptCodeToFixArtworkCall
+    }
+  }
+
   private func copyPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Copy Partial Art AppleScript") {
       let appleScript = partialArtworksAppleScript([missingArtwork])
       let pasteboard = NSPasteboard.general
       pasteboard.clearContents()
+      pasteboard.setString(appleScript, forType: .string)
+    }
+  }
+
+  private func copyArtButton(_ missingArtwork: MissingArtwork, image: NSImage) -> some View {
+    Button("Copy Art AppleScript") {
+      let appleScript = artworksAppleScript([missingArtwork])
+      let pasteboard = NSPasteboard.general
+      pasteboard.clearContents()
+      // Put the image on the clipboard for the script. Needs to be first.
+      pasteboard.writeObjects([image])
       pasteboard.setString(appleScript, forType: .string)
     }
   }
@@ -266,6 +294,7 @@ struct MissingArtApp: App {
                   pasteboard.clearContents()
                   pasteboard.writeObjects([image])
                 }
+                copyArtButton(missingImage.missingArtwork, image: image)
               } else {
                 Text("No Image Selected")
               }
