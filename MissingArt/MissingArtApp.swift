@@ -302,14 +302,14 @@ struct MissingArtApp: App {
             Text("Nothing To Do")
           }
         default:
+          let partials = missingImages.filter { $0.availability == .some }.map { $0.missingArtwork }
           Button("Copy Multiple Partial Art AppleScript") {
-            let appleScript = partialArtworksAppleScript(
-              missingImages.filter { $0.availability == .some }.map { $0.missingArtwork })
+            let appleScript = partialArtworksAppleScript(partials)
 
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
             pasteboard.setString(appleScript, forType: .string)
-          }
+          }.disabled(partials.count == 0)
         }
       }).alert(
         isPresented: $showUnableToFixPartialArt, error: fixArtError,
