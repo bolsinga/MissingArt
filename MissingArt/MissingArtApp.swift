@@ -275,16 +275,10 @@ struct MissingArtApp: App {
     WindowGroup {
       MissingArtworkView(imageContextMenuBuilder: {
         (missingImages: [MissingArtworkView.MissingImage]) in
-        if missingImages.count > 1 {
-          Button("Copy Multiple Partial Art AppleScript") {
-            let appleScript = partialArtworksAppleScript(
-              missingImages.filter { $0.availability == .some }.map { $0.missingArtwork })
-
-            let pasteboard = NSPasteboard.general
-            pasteboard.clearContents()
-            pasteboard.setString(appleScript, forType: .string)
-          }
-        } else {
+        switch missingImages.count {
+        case 0:
+          Text("Nothing To Do")
+        case 1:
           if let missingImage = missingImages.first {
             switch missingImage.availability {
             case .none:
@@ -304,6 +298,17 @@ struct MissingArtApp: App {
             case .unknown:
               Text("Unknown Artwork Issue")
             }
+          } else {
+            Text("Nothing To Do")
+          }
+        default:
+          Button("Copy Multiple Partial Art AppleScript") {
+            let appleScript = partialArtworksAppleScript(
+              missingImages.filter { $0.availability == .some }.map { $0.missingArtwork })
+
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(appleScript, forType: .string)
           }
         }
       }).alert(
