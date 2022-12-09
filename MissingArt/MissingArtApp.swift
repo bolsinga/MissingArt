@@ -35,11 +35,11 @@ extension MissingArtwork {
   }
 
   fileprivate var appleScriptCodeToFixPartialArtworkCall: String {
-    return appleScriptCodeToFixArtworkCall("findPartialImage")
+    return appleScriptCodeToFixArtworkCall("true")
   }
 
   fileprivate var appleScriptCodeToFixArtworkCall: String {
-    return appleScriptCodeToFixArtworkCall("clipboardImage")
+    return appleScriptCodeToFixArtworkCall("false")
   }
 }
 
@@ -122,10 +122,15 @@ struct MissingArtApp: App {
       end tell
       return matches
     end verifyTrack
-    on fixAlbumArtwork(searchString, albumString, artistString, uncallableFindImageHandler)
+    on fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks)
       tell application "Music"
         global findImageHandler
-        set findImageHandler to uncallableFindImageHandler
+        set findImageHandler to missing value
+        if findImageInTracks is true then
+          set findImageHandler to findPartialImage
+        else
+          set findImageHandler to clipboardImage
+        end if
         try
           set unfilteredResults to search the first library playlist for searchString
         on error errorString number errorNumber
