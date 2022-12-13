@@ -12,7 +12,7 @@ import SwiftUI
 struct MissingArtApp: App {
 
   @State private var fixArtError: FixArtError?
-  @State private var showUnableToFixPartialArt: Bool = false
+  @State private var showUnableToFixArtError: Bool = false
 
   private func copyPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Copy Partial Art AppleScript") {
@@ -36,7 +36,7 @@ struct MissingArtApp: App {
 
   @MainActor private func reportError(_ error: FixArtError) {
     fixArtError = error
-    showUnableToFixPartialArt = true
+    showUnableToFixArtError = true
   }
 
   private func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
@@ -108,14 +108,14 @@ struct MissingArtApp: App {
           }.disabled(partials.count == 0)
         }
       }).alert(
-        isPresented: $showUnableToFixPartialArt, error: fixArtError,
+        isPresented: $showUnableToFixArtError, error: fixArtError,
         actions: { error in
           Button("OK") {
-            showUnableToFixPartialArt = false
+            showUnableToFixArtError = false
           }
         },
         message: { error in
-          Text("The partial artwork was not able to be fixed. Try running as an AppleScript.")
+          Text("The artwork was not able to be fixed. Try running as an AppleScript.")
         }
       )
     }
