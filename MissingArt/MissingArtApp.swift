@@ -12,7 +12,6 @@ import SwiftUI
 struct MissingArtApp: App {
 
   @State private var fixArtError: FixArtError?
-  @State private var showUnableToFixArtError: Bool = false
 
   private func copyPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Copy Partial Art AppleScript") {
@@ -36,7 +35,6 @@ struct MissingArtApp: App {
 
   @MainActor private func reportError(_ error: FixArtError) {
     fixArtError = error
-    showUnableToFixArtError = true
   }
 
   private func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
@@ -108,10 +106,10 @@ struct MissingArtApp: App {
           }.disabled(partials.count == 0)
         }
       }).alert(
-        isPresented: $showUnableToFixArtError, error: fixArtError,
+        isPresented: .constant(fixArtError != nil), error: fixArtError,
         actions: { error in
           Button("OK") {
-            showUnableToFixArtError = false
+            fixArtError = nil
           }
         },
         message: { error in
