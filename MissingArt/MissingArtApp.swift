@@ -15,7 +15,8 @@ struct MissingArtApp: App {
 
   private func copyPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Copy Partial Art AppleScript") {
-      let appleScript = MissingArtwork.partialArtworksAppleScript([missingArtwork])
+      let appleScript = MissingArtwork.partialArtworksAppleScript(
+        [missingArtwork], catchAndLogErrors: true)
       let pasteboard = NSPasteboard.general
       pasteboard.clearContents()
       pasteboard.setString(appleScript, forType: .string)
@@ -24,7 +25,8 @@ struct MissingArtApp: App {
 
   private func copyArtButton(_ missingArtwork: MissingArtwork, image: NSImage) -> some View {
     Button("Copy Art AppleScript") {
-      let appleScript = MissingArtwork.artworksAppleScript([missingArtwork])
+      let appleScript = MissingArtwork.artworksAppleScript(
+        [missingArtwork], catchAndLogErrors: true)
       let pasteboard = NSPasteboard.general
       pasteboard.clearContents()
       // Put the image on the clipboard for the script. Needs to be first.
@@ -38,7 +40,8 @@ struct MissingArtApp: App {
   }
 
   private func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
-    let exec = NSAppleScript(source: MissingArtwork.partialArtworksAppleScript([missingArtwork]))
+    let exec = NSAppleScript(
+      source: MissingArtwork.partialArtworksAppleScript([missingArtwork], catchAndLogErrors: false))
     if let exec = exec {
       var errorDictionary: NSDictionary?
       _ = exec.executeAndReturnError(&errorDictionary)
@@ -98,7 +101,8 @@ struct MissingArtApp: App {
         default:
           let partials = missingImages.filter { $0.availability == .some }.map { $0.missingArtwork }
           Button("Copy Multiple Partial Art AppleScript") {
-            let appleScript = MissingArtwork.partialArtworksAppleScript(partials)
+            let appleScript = MissingArtwork.partialArtworksAppleScript(
+              partials, catchAndLogErrors: true)
 
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
