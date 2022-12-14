@@ -165,22 +165,32 @@ extension MissingArtwork {
     """
 
   private static func _artworksAppleScript(
-    _ missingArtworks: [MissingArtwork], caller: ((MissingArtwork) -> String)
+    _ missingArtworks: [MissingArtwork],
+    catchAndLogErrors: Bool,
+    caller: ((MissingArtwork) -> String)
   ) -> String {
     var appleScript = """
       \(appleScriptFixAlbumArtFunctionDefinition)
 
       """
     for missingArtwork in missingArtworks {
-      appleScript.append(
-        """
-        try
-          \(caller(missingArtwork))
-        on error errorString
-          log \"Error Trying to Fix Artwork: \" & errorString
-        end try
+      if catchAndLogErrors {
+        appleScript.append(
+          """
+          try
+            \(caller(missingArtwork))
+          on error errorString
+            log \"Error Trying to Fix Artwork: \" & errorString
+          end try
 
-        """)
+          """)
+      } else {
+        appleScript.append(
+          """
+            \(caller(missingArtwork))
+
+          """)
+      }
     }
     appleScript.append(
       """
@@ -189,14 +199,20 @@ extension MissingArtwork {
     return appleScript
   }
 
-  public static func partialArtworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
-    return _artworksAppleScript(missingArtworks) { missingArtwork in
+  public static func partialArtworksAppleScript(
+    _ missingArtworks: [MissingArtwork], catchAndLogErrors: Bool
+  ) -> String {
+    return _artworksAppleScript(missingArtworks, catchAndLogErrors: catchAndLogErrors) {
+      missingArtwork in
       missingArtwork.appleScriptCodeToFixPartialArtworkCall
     }
   }
 
-  public static func artworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
-    return _artworksAppleScript(missingArtworks) { missingArtwork in
+  public static func artworksAppleScript(
+    _ missingArtworks: [MissingArtwork], catchAndLogErrors: Bool
+  ) -> String {
+    return _artworksAppleScript(missingArtworks, catchAndLogErrors: catchAndLogErrors) {
+      missingArtwork in
       missingArtwork.appleScriptCodeToFixArtworkCall
     }
   }
