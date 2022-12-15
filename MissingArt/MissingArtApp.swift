@@ -48,38 +48,8 @@ struct MissingArtApp: App {
     }
   }
 
-  private func copyPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
-    Button("Copy Partial Art AppleScript") {
-      let appleScript = MissingArtwork.partialArtworksAppleScript(
-        [missingArtwork], catchAndLogErrors: true)
-      addToPasteboard(string: appleScript)
-    }
-  }
-
-  private func copyArtButton(_ missingArtwork: MissingArtwork, image: NSImage) -> some View {
-    Button("Copy Art AppleScript") {
-      let appleScript = MissingArtwork.artworksAppleScript(
-        [missingArtwork], catchAndLogErrors: true)
-      addToPasteboard(string: appleScript, image: image)
-    }
-  }
-
   @MainActor private func reportError(_ error: FixArtError) {
     fixArtError = error
-  }
-
-  private func fixPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
-    Button("Fix Partial Art") {
-      Task {
-        do {
-          try await MissingArtwork.fixPartialArtwork(missingArtwork)
-        } catch let error as LocalizedError {
-          await reportError(FixArtError.cannotFixPartialArtwork(missingArtwork, error))
-        } catch {
-          await reportError(FixArtError.unknownError(missingArtwork, error))
-        }
-      }
-    }
   }
 
   var body: some Scene {
@@ -97,13 +67,32 @@ struct MissingArtApp: App {
                 Button("Copy Artwork Image") {
                   addToPasteboard(image: image)
                 }
-                copyArtButton(missingImage.missingArtwork, image: image)
+                Button("Copy Art AppleScript") {
+                  let appleScript = MissingArtwork.artworksAppleScript(
+                    [missingImage.missingArtwork], catchAndLogErrors: true)
+                  addToPasteboard(string: appleScript, image: image)
+                }
               } else {
                 Text("No Image Selected")
               }
             case .some:
-              copyPartialArtButton(missingImage.missingArtwork)
-              fixPartialArtButton(missingImage.missingArtwork)
+              Button("Copy Partial Art AppleScript") {
+                let appleScript = MissingArtwork.partialArtworksAppleScript(
+                  [missingImage.missingArtwork], catchAndLogErrors: true)
+                addToPasteboard(string: appleScript)
+              }
+              Button("Fix Partial Art") {
+                Task {
+                  do {
+                    try await MissingArtwork.fixPartialArtwork(missingImage.missingArtwork)
+                  } catch let error as LocalizedError {
+                    reportError(
+                      FixArtError.cannotFixPartialArtwork(missingImage.missingArtwork, error))
+                  } catch {
+                    reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
+                  }
+                }
+              }
             case .unknown:
               Text("Unknown Artwork Issue")
             }
