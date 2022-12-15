@@ -43,18 +43,18 @@ extension MissingArtwork {
   }
 }
 
-enum FixArtError: Error {
+private enum FixArtAppleScriptError: Error {
   case appleScriptCannotExec(MissingArtwork)
   case appleScriptFailure(MissingArtwork, String)
   case appleScriptIssue(MissingArtwork)
   case unknownError(MissingArtwork, Error)
 }
 
-extension FixArtError {
+extension FixArtAppleScriptError {
   static func createAppleScriptError(
     missingArtwork: MissingArtwork, nsDictionary: NSDictionary
   )
-    -> FixArtError
+    -> FixArtAppleScriptError
   {
     if let message = nsDictionary[NSAppleScript.errorMessage] as? String {
       return .appleScriptFailure(missingArtwork, message)
@@ -63,7 +63,7 @@ extension FixArtError {
   }
 }
 
-extension FixArtError: CustomStringConvertible {
+extension FixArtAppleScriptError: CustomStringConvertible {
   var description: String {
     var detail: String
     switch self {
@@ -80,7 +80,7 @@ extension FixArtError: CustomStringConvertible {
   }
 }
 
-extension FixArtError: LocalizedError {
+extension FixArtAppleScriptError: LocalizedError {
   var errorDescription: String? {
     return self.description
   }
@@ -224,11 +224,11 @@ extension MissingArtwork {
       var errorDictionary: NSDictionary?
       _ = exec.executeAndReturnError(&errorDictionary)
       if let errorDictionary = errorDictionary {
-        throw FixArtError.createAppleScriptError(
+        throw FixArtAppleScriptError.createAppleScriptError(
           missingArtwork: missingArtwork, nsDictionary: errorDictionary)
       }
     } else {
-      throw FixArtError.appleScriptCannotExec(missingArtwork)
+      throw FixArtAppleScriptError.appleScriptCannotExec(missingArtwork)
     }
   }
 }
