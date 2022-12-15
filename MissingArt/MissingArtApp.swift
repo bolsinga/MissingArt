@@ -8,6 +8,28 @@
 import MissingArtwork
 import SwiftUI
 
+private enum FixArtError: Error {
+  case cannotFixPartialArtwork(MissingArtwork, LocalizedError)
+  case unknownError(MissingArtwork, Error)
+}
+
+extension FixArtError: LocalizedError {
+  var errorDescription: String? {
+    var detail: String
+    switch self {
+    case .cannotFixPartialArtwork(let missingArtwork, let error):
+      detail = "\(missingArtwork.description): \(error.errorDescription ?? "No Description")"
+    case .unknownError(let missingArtwork, let error):
+      detail = "\(missingArtwork.description): Unknown: \(String(describing: error))"
+    }
+    return "Unable to change Music artwork image for \(detail)"
+  }
+
+  var recoverySuggestion: String? {
+    "The artwork was not able to be fixed. Try running as an AppleScript."
+  }
+}
+
 @main
 struct MissingArtApp: App {
 
@@ -44,10 +66,10 @@ struct MissingArtApp: App {
       Task {
         do {
           try MissingArtwork.fixPartialArtwork(missingArtwork)
-        } catch let error as FixArtError {
-          await reportError(error)
+        } catch let error as LocalizedError {
+          await reportError(FixArtError.cannotFixPartialArtwork(missingArtwork, error))
         } catch {
-          await reportError(.unknownError(missingArtwork, error))
+          await reportError(FixArtError.unknownError(missingArtwork, error))
         }
       }
     }
@@ -102,7 +124,7 @@ struct MissingArtApp: App {
           }
         },
         message: { error in
-          Text("The artwork was not able to be fixed. Try running as an AppleScript.")
+          Text(error.recoverySuggestion ?? "")
         }
       )
     }
