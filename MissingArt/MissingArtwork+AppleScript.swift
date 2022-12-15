@@ -216,4 +216,19 @@ extension MissingArtwork {
       missingArtwork.appleScriptCodeToFixArtworkCall
     }
   }
+
+  public static func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
+    let exec = NSAppleScript(
+      source: MissingArtwork.partialArtworksAppleScript([missingArtwork], catchAndLogErrors: false))
+    if let exec = exec {
+      var errorDictionary: NSDictionary?
+      _ = exec.executeAndReturnError(&errorDictionary)
+      if let errorDictionary = errorDictionary {
+        throw FixArtError.createAppleScriptError(
+          missingArtwork: missingArtwork, nsDictionary: errorDictionary)
+      }
+    } else {
+      throw FixArtError.appleScriptCannotExec(missingArtwork)
+    }
+  }
 }

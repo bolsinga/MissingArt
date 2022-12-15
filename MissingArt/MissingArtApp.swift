@@ -39,26 +39,11 @@ struct MissingArtApp: App {
     fixArtError = error
   }
 
-  private func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
-    let exec = NSAppleScript(
-      source: MissingArtwork.partialArtworksAppleScript([missingArtwork], catchAndLogErrors: false))
-    if let exec = exec {
-      var errorDictionary: NSDictionary?
-      _ = exec.executeAndReturnError(&errorDictionary)
-      if let errorDictionary = errorDictionary {
-        throw FixArtError.createAppleScriptError(
-          missingArtwork: missingArtwork, nsDictionary: errorDictionary)
-      }
-    } else {
-      throw FixArtError.appleScriptCannotExec(missingArtwork)
-    }
-  }
-
   private func fixPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Fix Partial Art") {
       Task {
         do {
-          try fixPartialArtwork(missingArtwork)
+          try MissingArtwork.fixPartialArtwork(missingArtwork)
         } catch let error as FixArtError {
           await reportError(error)
         } catch {
