@@ -84,7 +84,10 @@ struct MissingArtApp: App {
               Button("Fix Partial Art") {
                 Task {
                   do {
-                    try await MissingArtwork.fixPartialArtwork(missingImage.missingArtwork)
+                    let script = try AppleScript(
+                      source: MissingArtwork.partialArtworksAppleScript(
+                        [missingImage.missingArtwork], catchAndLogErrors: false))
+                    try await script.run()
                   } catch let error as LocalizedError {
                     reportError(
                       FixArtError.cannotFixPartialArtwork(missingImage.missingArtwork, error))

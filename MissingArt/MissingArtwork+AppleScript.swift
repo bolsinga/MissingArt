@@ -173,10 +173,4 @@ extension MissingArtwork {
       missingArtwork.appleScriptCodeToFixArtworkCall
     }
   }
-
-  public static func fixPartialArtwork(_ missingArtwork: MissingArtwork) async throws {
-    let script = try AppleScript(
-      source: MissingArtwork.partialArtworksAppleScript([missingArtwork], catchAndLogErrors: false))
-    try await script.run()
-  }
 }
