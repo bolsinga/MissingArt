@@ -35,13 +35,24 @@ struct MissingArtApp: App {
 
   @State private var fixArtError: FixArtError?
 
+  private func addToPasteboard(string: String = "", image: NSImage? = nil) {
+    let pasteboard = NSPasteboard.general
+    pasteboard.clearContents()
+
+    // Put the image on the clipboard first, then the text.
+    if let image = image {
+      pasteboard.writeObjects([image])
+    }
+    if string.count > 0 {
+      pasteboard.setString(string, forType: .string)
+    }
+  }
+
   private func copyPartialArtButton(_ missingArtwork: MissingArtwork) -> some View {
     Button("Copy Partial Art AppleScript") {
       let appleScript = MissingArtwork.partialArtworksAppleScript(
         [missingArtwork], catchAndLogErrors: true)
-      let pasteboard = NSPasteboard.general
-      pasteboard.clearContents()
-      pasteboard.setString(appleScript, forType: .string)
+      addToPasteboard(string: appleScript)
     }
   }
 
@@ -49,11 +60,7 @@ struct MissingArtApp: App {
     Button("Copy Art AppleScript") {
       let appleScript = MissingArtwork.artworksAppleScript(
         [missingArtwork], catchAndLogErrors: true)
-      let pasteboard = NSPasteboard.general
-      pasteboard.clearContents()
-      // Put the image on the clipboard for the script. Needs to be first.
-      pasteboard.writeObjects([image])
-      pasteboard.setString(appleScript, forType: .string)
+      addToPasteboard(string: appleScript, image: image)
     }
   }
 
@@ -88,9 +95,7 @@ struct MissingArtApp: App {
             case .none:
               if let image = missingImage.image {
                 Button("Copy Artwork Image") {
-                  let pasteboard = NSPasteboard.general
-                  pasteboard.clearContents()
-                  pasteboard.writeObjects([image])
+                  addToPasteboard(image: image)
                 }
                 copyArtButton(missingImage.missingArtwork, image: image)
               } else {
@@ -111,9 +116,7 @@ struct MissingArtApp: App {
             let appleScript = MissingArtwork.partialArtworksAppleScript(
               partials, catchAndLogErrors: true)
 
-            let pasteboard = NSPasteboard.general
-            pasteboard.clearContents()
-            pasteboard.setString(appleScript, forType: .string)
+            addToPasteboard(string: appleScript)
           }.disabled(partials.count == 0)
         }
       }).alert(
