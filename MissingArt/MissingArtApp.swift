@@ -65,7 +65,7 @@ struct MissingArtApp: App {
     Button("Fix Partial Art") {
       Task {
         do {
-          try MissingArtwork.fixPartialArtwork(missingArtwork)
+          try await MissingArtwork.fixPartialArtwork(missingArtwork)
         } catch let error as LocalizedError {
           await reportError(FixArtError.cannotFixPartialArtwork(missingArtwork, error))
         } catch {

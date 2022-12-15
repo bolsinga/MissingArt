@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FE57696F294509200041E18D /* MissingArtwork+AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */; };
+		FE57697629494EA40041E18D /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57697529494EA40041E18D /* AppleScript.swift */; };
 		FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */; };
 		FE6D2C5327FF54680056FA7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5227FF54680056FA7E /* Assets.xcassets */; };
 		FE6D2C5627FF54680056FA7E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5527FF54680056FA7E /* Preview Assets.xcassets */; };
@@ -16,6 +17,7 @@
 
 /* Begin PBXFileReference section */
 		FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MissingArtwork+AppleScript.swift"; sourceTree = "<group>"; };
+		FE57697529494EA40041E18D /* AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleScript.swift; sourceTree = "<group>"; };
 		FE6D2C4B27FF54670056FA7E /* MissingArt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MissingArt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingArtApp.swift; sourceTree = "<group>"; };
 		FE6D2C5227FF54680056FA7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 			children = (
 				FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */,
 				FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */,
+				FE57697529494EA40041E18D /* AppleScript.swift */,
 				FE6D2C5227FF54680056FA7E /* Assets.xcassets */,
 				FE6D2C5727FF54680056FA7E /* MissingArt.entitlements */,
 				FE6D2C5427FF54680056FA7E /* Preview Content */,
@@ -157,6 +160,7 @@
 			files = (
 				FE57696F294509200041E18D /* MissingArtwork+AppleScript.swift in Sources */,
 				FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */,
+				FE57697629494EA40041E18D /* AppleScript.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

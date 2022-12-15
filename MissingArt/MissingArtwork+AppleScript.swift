@@ -43,49 +43,6 @@ extension MissingArtwork {
   }
 }
 
-private enum FixArtAppleScriptError: Error {
-  case appleScriptCannotExec(MissingArtwork)
-  case appleScriptFailure(MissingArtwork, String)
-  case appleScriptIssue(MissingArtwork)
-  case unknownError(MissingArtwork, Error)
-}
-
-extension FixArtAppleScriptError {
-  static func createAppleScriptError(
-    missingArtwork: MissingArtwork, nsDictionary: NSDictionary
-  )
-    -> FixArtAppleScriptError
-  {
-    if let message = nsDictionary[NSAppleScript.errorMessage] as? String {
-      return .appleScriptFailure(missingArtwork, message)
-    }
-    return .appleScriptIssue(missingArtwork)
-  }
-}
-
-extension FixArtAppleScriptError: CustomStringConvertible {
-  var description: String {
-    var detail: String
-    switch self {
-    case .appleScriptCannotExec(let missingArtwork):
-      detail = "\(missingArtwork.description). Cannot execute AppleScript."
-    case .appleScriptFailure(let missingArtwork, let description):
-      detail = "\(missingArtwork.description) \(description)"
-    case .appleScriptIssue(let missingArtwork):
-      detail = "\(missingArtwork.description). AppleScript does not have an identifiable error."
-    case .unknownError(let missingArtwork, let error):
-      detail = "\(missingArtwork.description). Unknown error: \(String(describing: error))."
-    }
-    return "Unable to change Music artwork image for \(detail)"
-  }
-}
-
-extension FixArtAppleScriptError: LocalizedError {
-  var errorDescription: String? {
-    return self.description
-  }
-}
-
 extension MissingArtwork {
   private static let appleScriptFixAlbumArtFunctionDefinition = """
     on clipboardImage(ignored)
@@ -217,18 +174,8 @@ extension MissingArtwork {
     }
   }
 
-  public static func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws {
-    let exec = NSAppleScript(
-      source: MissingArtwork.partialArtworksAppleScript([missingArtwork], catchAndLogErrors: false))
-    if let exec = exec {
-      var errorDictionary: NSDictionary?
-      _ = exec.executeAndReturnError(&errorDictionary)
-      if let errorDictionary = errorDictionary {
-        throw FixArtAppleScriptError.createAppleScriptError(
-          missingArtwork: missingArtwork, nsDictionary: errorDictionary)
-      }
-    } else {
-      throw FixArtAppleScriptError.appleScriptCannotExec(missingArtwork)
-    }
+  public static func fixPartialArtwork(_ missingArtwork: MissingArtwork) async throws {
+    let script = try AppleScript(source: MissingArtwork.partialArtworksAppleScript([missingArtwork], catchAndLogErrors: false))
+    try await script.run()
   }
 }
