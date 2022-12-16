@@ -19,27 +19,43 @@ extension MissingArtwork {
     "\(simpleRepresentation)".escapeQuotes
   }
 
-  private var appleScriptVerificationParameters: String {
+  private var appleScriptVerificationParameters: (String, String) {
     switch self {
     case .ArtistAlbum(let artist, let album):
-      return "\"\(album.escapeQuotes)\", \"\(artist.escapeQuotes)\""
+      return (album.escapeQuotes, artist.escapeQuotes)
     case .CompilationAlbum(let album):
-      return "\"\(album.escapeQuotes)\", \"\""
+      return (album.escapeQuotes, "")
     }
   }
 
-  private func appleScriptCodeToFixArtworkCall(_ findImageHandler: String) -> String {
+  private func appleScriptCodeToFixArtworkCall(_ parameters: (String, String, String, String, Bool))
+    -> String
+  {
     return """
-          fixAlbumArtwork(\"\(appleScriptSearchRepresentation)\", \(appleScriptVerificationParameters), \(findImageHandler))
+          \(parameters.0)(\"\(parameters.1)\", \"\(parameters.2)\", \"\(parameters.3)\", \(parameters.4))
       """
   }
 
+  private var fixAlbumArtworkHandler: String {
+    "fixAlbumArtwork"
+  }
+
+  private var appleScriptFixPartialArtworkParameters: (String, String, String, String, Bool) {
+    let params = appleScriptVerificationParameters
+    return (fixAlbumArtworkHandler, appleScriptSearchRepresentation, params.0, params.1, true)
+  }
+
+  private var appleScriptFixArtworkParameters: (String, String, String, String, Bool) {
+    let params = appleScriptVerificationParameters
+    return (fixAlbumArtworkHandler, appleScriptSearchRepresentation, params.0, params.1, false)
+  }
+
   private var appleScriptCodeToFixPartialArtworkCall: String {
-    return appleScriptCodeToFixArtworkCall("true")
+    return appleScriptCodeToFixArtworkCall(appleScriptFixPartialArtworkParameters)
   }
 
   private var appleScriptCodeToFixArtworkCall: String {
-    return appleScriptCodeToFixArtworkCall("false")
+    return appleScriptCodeToFixArtworkCall(appleScriptFixArtworkParameters)
   }
 }
 
