@@ -30,6 +30,13 @@ extension FixArtError: LocalizedError {
   }
 }
 
+private extension MissingArtwork {
+  func fixPartialArtwork() async throws {
+    let script = try AppleScript(source: MissingArtwork.partialArtworksAppleScript([self], catchAndLogErrors: false))
+    try await script.run()
+  }
+}
+
 @main
 struct MissingArtApp: App {
 
@@ -84,10 +91,7 @@ struct MissingArtApp: App {
               Button("Fix Partial Art") {
                 Task {
                   do {
-                    let script = try AppleScript(
-                      source: MissingArtwork.partialArtworksAppleScript(
-                        [missingImage.missingArtwork], catchAndLogErrors: false))
-                    try await script.run()
+                    try await missingImage.missingArtwork.fixPartialArtwork()
                   } catch let error as LocalizedError {
                     reportError(
                       FixArtError.cannotFixPartialArtwork(missingImage.missingArtwork, error))
