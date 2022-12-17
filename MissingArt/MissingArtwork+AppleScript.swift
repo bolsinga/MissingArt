@@ -190,3 +190,14 @@ extension MissingArtwork {
     }
   }
 }
+
+extension MissingArtwork {
+  func fixPartialArtwork() async throws {
+    let script = try AppleScript(source: MissingArtwork.appleScriptFixAlbumArtFunctionDefinition)
+
+    let params = appleScriptFixPartialArtworkParameters
+    try await script.run(
+      handler: params.0,
+      parameters: params.1, params.2, params.3, params.4)
+  }
+}
