@@ -30,9 +30,10 @@ extension FixArtError: LocalizedError {
   }
 }
 
-private extension MissingArtwork {
-  func fixPartialArtwork() async throws {
-    let script = try AppleScript(source: MissingArtwork.partialArtworksAppleScript([self], catchAndLogErrors: false))
+extension MissingArtwork {
+  fileprivate func fixPartialArtwork() async throws {
+    let script = try AppleScript(
+      source: MissingArtwork.partialArtworksAppleScript([self], catchAndLogErrors: false))
     try await script.run()
   }
 }
