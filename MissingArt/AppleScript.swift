@@ -99,15 +99,16 @@ public actor AppleScript {
     }
   }
 
-  public func run() throws {
+  public func run() throws -> Bool {
     var errorDictionary: NSDictionary?
-    _ = script.executeAndReturnError(&errorDictionary)
+    let result = script.executeAndReturnError(&errorDictionary)
     if let errorDictionary = errorDictionary {
       throw AppleScriptError.createExecuteError(errorDictionary)
     }
+    return result.booleanValue
   }
 
-  private func run(handler: String, parameters: NSAppleEventDescriptor) throws {
+  private func run(handler: String, parameters: NSAppleEventDescriptor) throws -> Bool {
     // https://developer.apple.com/forums/thread/98830?answerId=301006022#301006022
     // See the above for the source of this code.
     let event = NSAppleEventDescriptor(
@@ -122,13 +123,14 @@ public actor AppleScript {
     event.setDescriptor(parameters, forKeyword: AEKeyword(keyDirectObject))
 
     var errorDictionary: NSDictionary?
-    _ = script.executeAppleEvent(event, error: &errorDictionary)
+    let result = script.executeAppleEvent(event, error: &errorDictionary)
     if let errorDictionary = errorDictionary {
       throw AppleScriptError.createExecuteAppleEventError(errorDictionary)
     }
+    return result.booleanValue
   }
 
-  func run(handler: String, parameters: Any...) throws {
+  func run(handler: String, parameters: Any...) throws -> Bool {
     let asParameters = NSAppleEventDescriptor.list()
 
     for parameter in parameters {
@@ -138,6 +140,6 @@ public actor AppleScript {
       asParameters.insert(parameter.descriptor(), at: 0)
     }
 
-    try run(handler: handler, parameters: asParameters)
+    return try run(handler: handler, parameters: asParameters)
   }
 }
