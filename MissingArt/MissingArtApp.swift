@@ -11,6 +11,8 @@ import SwiftUI
 private enum FixArtError: Error {
   case cannotFixPartialArtwork(MissingArtwork, LocalizedError)
   case unknownError(MissingArtwork, Error)
+  case cannotInitializeScript(LocalizedError)
+  case unknownScriptInitializationError(Error)
 }
 
 extension FixArtError: LocalizedError {
@@ -21,6 +23,10 @@ extension FixArtError: LocalizedError {
       detail = "\(missingArtwork.description): \(error.errorDescription ?? "No Description")"
     case .unknownError(let missingArtwork, let error):
       detail = "\(missingArtwork.description): Unknown: \(String(describing: error))"
+    case .cannotInitializeScript(let error):
+      detail = "Script Initialization Error: \(error.errorDescription ?? "No Description")"
+    case .unknownScriptInitializationError(let error):
+      detail = "Unknown Script Initialization Error: \(String(describing: error))"
     }
     return "Unable to change Music artwork image for \(detail)"
   }
@@ -32,6 +38,8 @@ extension FixArtError: LocalizedError {
 
 @main
 struct MissingArtApp: App {
+
+  @State private var script: AppleScript?
 
   @State private var fixArtError: FixArtError?
 
@@ -84,7 +92,7 @@ struct MissingArtApp: App {
               Button("Fix Partial Art") {
                 Task {
                   do {
-                    try await missingImage.missingArtwork.fixPartialArtwork()
+                    try await script?.fixPartialArtwork(missingImage.missingArtwork)
                   } catch let error as LocalizedError {
                     reportError(
                       FixArtError.cannotFixPartialArtwork(missingImage.missingArtwork, error))
@@ -119,6 +127,15 @@ struct MissingArtApp: App {
           Text(error.recoverySuggestion ?? "")
         }
       )
+      .task {
+        do {
+          script = try await MissingArtwork.createScript()
+        } catch let error as LocalizedError {
+          reportError(FixArtError.cannotInitializeScript(error))
+        } catch {
+          reportError(FixArtError.unknownScriptInitializationError(error))
+        }
+      }
     }
   }
 }
