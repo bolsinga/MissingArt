@@ -42,6 +42,7 @@ struct MissingArtApp: App {
   @State private var script: AppleScript?
 
   @State private var fixArtError: FixArtError?
+  @State private var processingStates: [MissingArtwork: Description.ProcessingState] = [:]
 
   private func addToPasteboard(string: String = "", image: NSImage? = nil) {
     let pasteboard = NSPasteboard.general
@@ -60,63 +61,81 @@ struct MissingArtApp: App {
     fixArtError = error
   }
 
+  @MainActor private func updateProcessingState(
+    _ missingArtwork: MissingArtwork, processingState: Description.ProcessingState
+  ) {
+    processingStates[missingArtwork] = processingState
+  }
+
   var body: some Scene {
     WindowGroup {
-      MissingArtworkView(imageContextMenuBuilder: {
-        (missingImages: [MissingArtworkView.MissingImage]) in
-        switch missingImages.count {
-        case 0:
-          Text("Nothing To Do")
-        case 1:
-          if let missingImage = missingImages.first {
-            switch missingImage.availability {
-            case .none:
-              if let image = missingImage.image {
-                Button("Copy Artwork Image") {
-                  addToPasteboard(image: image)
+      MissingArtworkView(
+        imageContextMenuBuilder: {
+          (missingImages: [MissingArtworkView.MissingImage]) in
+          switch missingImages.count {
+          case 0:
+            Text("Nothing To Do")
+          case 1:
+            if let missingImage = missingImages.first {
+              switch missingImage.availability {
+              case .none:
+                if let image = missingImage.image {
+                  Button("Copy Artwork Image") {
+                    addToPasteboard(image: image)
+                  }
+                  Button("Copy Art AppleScript") {
+                    let appleScript = MissingArtwork.artworksAppleScript(
+                      [missingImage.missingArtwork], catchAndLogErrors: true)
+                    addToPasteboard(string: appleScript, image: image)
+                  }
+                } else {
+                  Text("No Image Selected")
                 }
-                Button("Copy Art AppleScript") {
-                  let appleScript = MissingArtwork.artworksAppleScript(
+              case .some:
+                Button("Copy Partial Art AppleScript") {
+                  let appleScript = MissingArtwork.partialArtworksAppleScript(
                     [missingImage.missingArtwork], catchAndLogErrors: true)
-                  addToPasteboard(string: appleScript, image: image)
+                  addToPasteboard(string: appleScript)
                 }
-              } else {
-                Text("No Image Selected")
-              }
-            case .some:
-              Button("Copy Partial Art AppleScript") {
-                let appleScript = MissingArtwork.partialArtworksAppleScript(
-                  [missingImage.missingArtwork], catchAndLogErrors: true)
-                addToPasteboard(string: appleScript)
-              }
-              Button("Fix Partial Art") {
-                Task {
-                  do {
-                    _ = try await script?.fixPartialArtwork(missingImage.missingArtwork)
-                  } catch let error as LocalizedError {
-                    reportError(
-                      FixArtError.cannotFixPartialArtwork(missingImage.missingArtwork, error))
-                  } catch {
-                    reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
+                Button("Fix Partial Art") {
+                  Task {
+                    updateProcessingState(missingImage.missingArtwork, processingState: .processing)
+
+                    var result: Bool = false
+                    do {
+                      if let script = script {
+                        result = try await script.fixPartialArtwork(missingImage.missingArtwork)
+                      }
+                    } catch let error as LocalizedError {
+                      reportError(
+                        FixArtError.cannotFixPartialArtwork(missingImage.missingArtwork, error))
+                    } catch {
+                      reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
+                    }
+
+                    updateProcessingState(
+                      missingImage.missingArtwork, processingState: result ? .success : .failure)
                   }
                 }
+              case .unknown:
+                Text("Unknown Artwork Issue")
               }
-            case .unknown:
-              Text("Unknown Artwork Issue")
+            } else {
+              Text("Nothing To Do")
             }
-          } else {
-            Text("Nothing To Do")
-          }
-        default:
-          let partials = missingImages.filter { $0.availability == .some }.map { $0.missingArtwork }
-          Button("Copy Multiple Partial Art AppleScript") {
-            let appleScript = MissingArtwork.partialArtworksAppleScript(
-              partials, catchAndLogErrors: true)
+          default:
+            let partials = missingImages.filter { $0.availability == .some }.map {
+              $0.missingArtwork
+            }
+            Button("Copy Multiple Partial Art AppleScript") {
+              let appleScript = MissingArtwork.partialArtworksAppleScript(
+                partials, catchAndLogErrors: true)
 
-            addToPasteboard(string: appleScript)
-          }.disabled(partials.count == 0)
-        }
-      }).alert(
+              addToPasteboard(string: appleScript)
+            }.disabled(partials.count == 0)
+          }
+        }, processingStates: $processingStates
+      ).alert(
         isPresented: .constant(fixArtError != nil), error: fixArtError,
         actions: { error in
           Button("OK") {
