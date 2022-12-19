@@ -133,6 +133,7 @@ extension MissingArtwork {
           end try
         end repeat
       end tell
+      return true
     end fixAlbumArtwork
 
     """
@@ -198,9 +199,9 @@ extension MissingArtwork {
 }
 
 extension AppleScript {
-  func fixPartialArtwork(_ missingArtwork: MissingArtwork) async throws {
+  func fixPartialArtwork(_ missingArtwork: MissingArtwork) async throws -> Bool {
     let params = missingArtwork.appleScriptFixPartialArtworkParameters
-    try self.run(
+    return try self.run(
       handler: params.0,
       parameters: params.1, params.2, params.3, params.4)
   }
