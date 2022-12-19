@@ -45,7 +45,7 @@ extension MissingArtwork {
     return (fixAlbumArtworkHandler, appleScriptSearchRepresentation, params.0, params.1, true)
   }
 
-  private var appleScriptFixArtworkParameters: (String, String, String, String, Bool) {
+  fileprivate var appleScriptFixArtworkParameters: (String, String, String, String, Bool) {
     let params = appleScriptVerificationParameters
     return (fixAlbumArtworkHandler, appleScriptSearchRepresentation, params.0, params.1, false)
   }
@@ -204,5 +204,10 @@ extension AppleScript {
     return try self.run(
       handler: params.0,
       parameters: params.1, params.2, params.3, params.4)
+  }
+
+  func fixArtwork(_ missingArtwork: MissingArtwork) async throws -> Bool {
+    let params = missingArtwork.appleScriptFixArtworkParameters
+    return try self.run(handler: params.0, parameters: params.1, params.2, params.3, params.4)
   }
 }

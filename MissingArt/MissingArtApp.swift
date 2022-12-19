@@ -9,7 +9,7 @@ import MissingArtwork
 import SwiftUI
 
 private enum FixArtError: Error {
-  case cannotFixPartialArtwork(MissingArtwork, LocalizedError)
+  case cannotFixArtwork(MissingArtwork, LocalizedError)
   case unknownError(MissingArtwork, Error)
   case cannotInitializeScript(LocalizedError)
   case unknownScriptInitializationError(Error)
@@ -19,7 +19,7 @@ extension FixArtError: LocalizedError {
   var errorDescription: String? {
     var detail: String
     switch self {
-    case .cannotFixPartialArtwork(let missingArtwork, let error):
+    case .cannotFixArtwork(let missingArtwork, let error):
       detail = "\(missingArtwork.description): \(error.errorDescription ?? "No Description")"
     case .unknownError(let missingArtwork, let error):
       detail = "\(missingArtwork.description): Unknown: \(String(describing: error))"
@@ -88,6 +88,28 @@ struct MissingArtApp: App {
                       [missingImage.missingArtwork], catchAndLogErrors: true)
                     addToPasteboard(string: appleScript, image: image)
                   }
+                  Button("Fix Art") {
+                    addToPasteboard(image: image)
+                    Task {
+                      updateProcessingState(
+                        missingImage.missingArtwork, processingState: .processing)
+
+                      var result: Bool = false
+                      do {
+                        if let script = script {
+                          result = try await script.fixArtwork(missingImage.missingArtwork)
+                        }
+                      } catch let error as LocalizedError {
+                        reportError(
+                          FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
+                      } catch {
+                        reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
+                      }
+
+                      updateProcessingState(
+                        missingImage.missingArtwork, processingState: result ? .success : .failure)
+                    }
+                  }
                 } else {
                   Text("No Image Selected")
                 }
@@ -108,7 +130,7 @@ struct MissingArtApp: App {
                       }
                     } catch let error as LocalizedError {
                       reportError(
-                        FixArtError.cannotFixPartialArtwork(missingImage.missingArtwork, error))
+                        FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
                     } catch {
                       reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
                     }
