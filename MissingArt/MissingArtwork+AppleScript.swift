@@ -5,6 +5,7 @@
 //  Created by Greg Bolsinga on 12/10/22.
 //
 
+import AppKit
 import Foundation
 import MissingArtwork
 
@@ -32,7 +33,7 @@ extension MissingArtwork {
     -> String
   {
     return """
-          \(parameters.0)(\"\(parameters.1)\", \"\(parameters.2)\", \"\(parameters.3)\", \(parameters.4))
+          \(parameters.0)(\"\(parameters.1)\", \"\(parameters.2)\", \"\(parameters.3)\", \(parameters.4), missing value)
       """
   }
 
@@ -90,7 +91,7 @@ extension MissingArtwork {
       end tell
       return matches
     end verifyTrack
-    on fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks)
+    on fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks, externalImageData)
       tell application "Music"
         global findImageHandler
         set findImageHandler to missing value
@@ -110,7 +111,12 @@ extension MissingArtwork {
             set the end of results to trk
           end if
         end repeat
-        set imageData to my findImageHandler(results)
+        set imageData to missing value
+        if externalImageData is not missing value then
+          set imageData to externalImageData
+        else
+          set imageData to my findImageHandler(results)
+        end if
         if imageData is missing value then
           set message to "Cannot find image data for " & searchString
           error message number 502
@@ -206,8 +212,9 @@ extension AppleScript {
       parameters: params.1, params.2, params.3, params.4)
   }
 
-  func fixArtwork(_ missingArtwork: MissingArtwork) async throws -> Bool {
+  func fixArtwork(_ missingArtwork: MissingArtwork, image: NSImage) async throws -> Bool {
     let params = missingArtwork.appleScriptFixArtworkParameters
-    return try self.run(handler: params.0, parameters: params.1, params.2, params.3, params.4)
+    return try self.run(
+      handler: params.0, parameters: params.1, params.2, params.3, params.4, image)
   }
 }

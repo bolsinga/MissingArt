@@ -5,22 +5,44 @@
 //  Created by Greg Bolsinga on 12/13/22.
 //
 
+import AppKit
 import Carbon
 import Foundation
 
 private protocol AppleScriptDescriptable {
-  func descriptor() -> NSAppleEventDescriptor
+  func descriptor() throws -> NSAppleEventDescriptor
 }
 
 extension String: AppleScriptDescriptable {
-  fileprivate func descriptor() -> NSAppleEventDescriptor {
+  fileprivate func descriptor() throws -> NSAppleEventDescriptor {
     NSAppleEventDescriptor(string: self)
   }
 }
 
 extension Bool: AppleScriptDescriptable {
-  fileprivate func descriptor() -> NSAppleEventDescriptor {
+  fileprivate func descriptor() throws -> NSAppleEventDescriptor {
     NSAppleEventDescriptor(boolean: self)
+  }
+}
+
+extension NSImage: AppleScriptDescriptable {
+  fileprivate func descriptor() throws -> NSAppleEventDescriptor {
+    // I changed the AppleScript to return a valid image data as the return value.
+    // I then inspected it with the debugger to get the descriptorType. 'atdt' is 'tdta'
+    // reversed which is what Script Editor will show for the class type for Image data.
+    // Since Apple Script pre-dates the macos endian switch, my bet is it's backwards due to that.
+    //    (lldb) p result.descriptorType
+    //    (DescType) $R2 = 1952740449
+    //    (lldb) p/c result.descriptorType
+    //    (DescType) $R3 = atdt
+    //    (lldb) p/x result.descriptorType
+    //    (DescType) $R4 = 0x74647461
+    let descriptor = NSAppleEventDescriptor(
+      descriptorType: 0x7464_7461, data: self.tiffRepresentation)
+    guard let descriptor = descriptor else {
+      throw AppleScriptError.typeIsNotDescriptable(self.className)
+    }
+    return descriptor
   }
 }
 
@@ -137,7 +159,7 @@ public actor AppleScript {
       guard let parameter = parameter as? AppleScriptDescriptable else {
         throw AppleScriptError.typeIsNotDescriptable("\(parameter.self)")
       }
-      asParameters.insert(parameter.descriptor(), at: 0)
+      asParameters.insert(try parameter.descriptor(), at: 0)
     }
 
     return try run(handler: handler, parameters: asParameters)
