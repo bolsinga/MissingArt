@@ -89,7 +89,6 @@ struct MissingArtApp: App {
                     addToPasteboard(string: appleScript, image: image)
                   }
                   Button("Fix Art") {
-                    addToPasteboard(image: image)
                     Task {
                       updateProcessingState(
                         missingImage.missingArtwork, processingState: .processing)
@@ -97,7 +96,8 @@ struct MissingArtApp: App {
                       var result: Bool = false
                       do {
                         if let script = script {
-                          result = try await script.fixArtwork(missingImage.missingArtwork)
+                          result = try await script.fixArtwork(
+                            missingImage.missingArtwork, image: image)
                         }
                       } catch let error as LocalizedError {
                         reportError(
