@@ -17,22 +17,27 @@ private enum FixArtError: Error {
 
 extension FixArtError: LocalizedError {
   var errorDescription: String? {
-    var detail: String
     switch self {
     case .cannotFixArtwork(let missingArtwork, let error):
-      detail = "\(missingArtwork.description): \(error.errorDescription ?? "No Description")"
+      return
+        "Unable to change Music artwork image for \(missingArtwork.description): \(error.errorDescription ?? "No Description")"
     case .unknownError(let missingArtwork, let error):
-      detail = "\(missingArtwork.description): Unknown: \(String(describing: error))"
+      return
+        "Unable to change Music artwork image for \(missingArtwork.description): Unknown: \(String(describing: error))"
     case .cannotInitializeScript(let error):
-      detail = "Script Initialization Error: \(error.errorDescription ?? "No Description")"
+      return "AppleScript Initialization Error: \(error.errorDescription ?? "No Description")"
     case .unknownScriptInitializationError(let error):
-      detail = "Unknown Script Initialization Error: \(String(describing: error))"
+      return "Unknown AppleScript Initialization Error: \(String(describing: error))"
     }
-    return "Unable to change Music artwork image for \(detail)"
   }
 
   var recoverySuggestion: String? {
-    "The artwork was not able to be fixed. Try running as an AppleScript."
+    switch self {
+    case .cannotFixArtwork(_, _), .unknownError(_, _):
+      return "The artwork was not able to be fixed. Try running as an AppleScript."
+    case .cannotInitializeScript(_), .unknownScriptInitializationError(_):
+      return "AppleScript cannot be initialized. Use AppleScript Editor to run scripts."
+    }
   }
 }
 
@@ -109,7 +114,7 @@ struct MissingArtApp: App {
                       updateProcessingState(
                         missingImage.missingArtwork, processingState: result ? .success : .failure)
                     }
-                  }
+                  }.disabled(script == nil)
                 } else {
                   Text("No Image Selected")
                 }
@@ -138,7 +143,7 @@ struct MissingArtApp: App {
                     updateProcessingState(
                       missingImage.missingArtwork, processingState: result ? .success : .failure)
                   }
-                }
+                }.disabled(script == nil)
               case .unknown:
                 Text("Unknown Artwork Issue")
               }
