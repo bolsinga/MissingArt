@@ -95,15 +95,18 @@ struct MissingArtApp: App {
                   }
                   Button("Fix Art") {
                     Task {
+                      guard let script = script else {
+                        debugPrint("Task is running when button should be disabled.")
+                        return
+                      }
+
                       updateProcessingState(
                         missingImage.missingArtwork, processingState: .processing)
 
                       var result: Bool = false
                       do {
-                        if let script = script {
-                          result = try await script.fixArtwork(
-                            missingImage.missingArtwork, image: image)
-                        }
+                        result = try await script.fixArtwork(
+                          missingImage.missingArtwork, image: image)
                       } catch let error as LocalizedError {
                         reportError(
                           FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
@@ -126,13 +129,15 @@ struct MissingArtApp: App {
                 }
                 Button("Fix Partial Art") {
                   Task {
+                    guard let script = script else {
+                      debugPrint("Task is running when button should be disabled.")
+                      return
+                    }
                     updateProcessingState(missingImage.missingArtwork, processingState: .processing)
 
                     var result: Bool = false
                     do {
-                      if let script = script {
-                        result = try await script.fixPartialArtwork(missingImage.missingArtwork)
-                      }
+                      result = try await script.fixPartialArtwork(missingImage.missingArtwork)
                     } catch let error as LocalizedError {
                       reportError(
                         FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
