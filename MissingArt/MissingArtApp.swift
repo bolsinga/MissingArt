@@ -102,7 +102,7 @@ struct MissingArtApp: App {
             Text("Nothing To Do")
           case 1:
             if let missingImage = missingImages.first {
-              switch missingImage.availability {
+              switch missingImage.missingArtwork.availability {
               case .none:
                 if let image = missingImage.image {
                   Button("Copy Artwork Image") {
@@ -153,7 +153,7 @@ struct MissingArtApp: App {
               Text("Nothing To Do")
             }
           default:
-            let partials = missingImages.filter { $0.availability == .some }.map {
+            let partials = missingImages.filter { $0.missingArtwork.availability == .some }.map {
               $0.missingArtwork
             }
             Button("Copy Multiple Partial Art AppleScript") {
