@@ -72,6 +72,26 @@ struct MissingArtApp: App {
     processingStates[missingArtwork] = processingState
   }
 
+  private func fixArtworkAppleScript(
+    missingImage: MissingArtworkView.MissingImage, scriptHandler: () async throws -> Bool
+  ) async {
+    await updateProcessingState(
+      missingImage.missingArtwork, processingState: .processing)
+
+    var result: Bool = false
+    do {
+      result = try await scriptHandler()
+    } catch let error as LocalizedError {
+      await reportError(
+        FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
+    } catch {
+      await reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
+    }
+
+    await updateProcessingState(
+      missingImage.missingArtwork, processingState: result ? .success : .failure)
+  }
+
   var body: some Scene {
     WindowGroup {
       MissingArtworkView(
@@ -100,22 +120,10 @@ struct MissingArtApp: App {
                         return
                       }
 
-                      updateProcessingState(
-                        missingImage.missingArtwork, processingState: .processing)
-
-                      var result: Bool = false
-                      do {
-                        result = try await script.fixArtwork(
+                      await fixArtworkAppleScript(missingImage: missingImage) {
+                        return try await script.fixArtwork(
                           missingImage.missingArtwork, image: image)
-                      } catch let error as LocalizedError {
-                        reportError(
-                          FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
-                      } catch {
-                        reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
                       }
-
-                      updateProcessingState(
-                        missingImage.missingArtwork, processingState: result ? .success : .failure)
                     }
                   }.disabled(script == nil)
                 } else {
@@ -133,20 +141,9 @@ struct MissingArtApp: App {
                       debugPrint("Task is running when button should be disabled.")
                       return
                     }
-                    updateProcessingState(missingImage.missingArtwork, processingState: .processing)
-
-                    var result: Bool = false
-                    do {
-                      result = try await script.fixPartialArtwork(missingImage.missingArtwork)
-                    } catch let error as LocalizedError {
-                      reportError(
-                        FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
-                    } catch {
-                      reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
+                    await fixArtworkAppleScript(missingImage: missingImage) {
+                      return try await script.fixPartialArtwork(missingImage.missingArtwork)
                     }
-
-                    updateProcessingState(
-                      missingImage.missingArtwork, processingState: result ? .success : .failure)
                   }
                 }.disabled(script == nil)
               case .unknown:
