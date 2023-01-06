@@ -22,9 +22,9 @@ extension MissingArtwork {
 
   private var appleScriptVerificationParameters: (String, String) {
     switch self {
-    case .ArtistAlbum(let artist, let album):
+    case .ArtistAlbum(let artist, let album, _):
       return (album.escapeQuotes, artist.escapeQuotes)
-    case .CompilationAlbum(let album):
+    case .CompilationAlbum(let album, _):
       return (album.escapeQuotes, "")
     }
   }
