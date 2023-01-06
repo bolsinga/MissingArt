@@ -125,7 +125,7 @@ struct MissingArtApp: App {
                           missingImage.missingArtwork, image: image)
                       }
                     }
-                  }.disabled(script == nil)
+                  }
                 } else {
                   Text("No Image Selected")
                 }
@@ -145,7 +145,7 @@ struct MissingArtApp: App {
                       return try await script.fixPartialArtwork(missingImage.missingArtwork)
                     }
                   }
-                }.disabled(script == nil)
+                }
               case .unknown:
                 Text("Unknown Artwork Issue")
               }
