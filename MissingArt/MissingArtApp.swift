@@ -54,7 +54,7 @@ struct MissingArtApp: App {
     pasteboard.clearContents()
 
     // Put the image on the clipboard first, then the text.
-    if let image = image {
+    if let image {
       pasteboard.writeObjects([image])
     }
     if string.count > 0 {
