@@ -114,7 +114,7 @@ public actor AppleScript {
 
     var errorDictionary: NSDictionary?
     _ = exec.compileAndReturnError(&errorDictionary)
-    if let errorDictionary = errorDictionary {
+    if let errorDictionary {
       throw AppleScriptError.createCompileError(errorDictionary)
     } else {
       script = exec
@@ -124,7 +124,7 @@ public actor AppleScript {
   public func run() throws -> Bool {
     var errorDictionary: NSDictionary?
     let result = script.executeAndReturnError(&errorDictionary)
-    if let errorDictionary = errorDictionary {
+    if let errorDictionary {
       throw AppleScriptError.createExecuteError(errorDictionary)
     }
     return result.booleanValue
@@ -146,7 +146,7 @@ public actor AppleScript {
 
     var errorDictionary: NSDictionary?
     let result = script.executeAppleEvent(event, error: &errorDictionary)
-    if let errorDictionary = errorDictionary {
+    if let errorDictionary {
       throw AppleScriptError.createExecuteAppleEventError(errorDictionary)
     }
     return result.booleanValue
