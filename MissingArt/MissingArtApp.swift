@@ -73,7 +73,7 @@ struct MissingArtApp: App {
   }
 
   private func fixArtworkAppleScript(
-    missingImage: MissingArtworkView.MissingImage, scriptHandler: () async throws -> Bool
+    missingImage: (missingArtwork: MissingArtwork, image: NSImage?), scriptHandler: () async throws -> Bool
   ) async {
     await updateProcessingState(
       missingImage.missingArtwork, processingState: .processing)
@@ -96,7 +96,7 @@ struct MissingArtApp: App {
     WindowGroup {
       MissingArtworkView(
         imageContextMenuBuilder: {
-          (missingImages: [MissingArtworkView.MissingImage]) in
+          (missingImages: [(missingArtwork: MissingArtwork, image: NSImage?)]) in
           switch missingImages.count {
           case 0:
             Text("Nothing To Do")
