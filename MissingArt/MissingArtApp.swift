@@ -37,7 +37,7 @@ extension FixArtError: LocalizedError {
 @main
 struct MissingArtApp: App {
 
-  @State private var script: AppleScript?
+  @State private var loadingState: LoadingState<AppleScript> = .idle
 
   @State private var fixArtError: Error?
   @State private var processingStates: [MissingArtwork: Description.ProcessingState] = [:]
@@ -118,7 +118,7 @@ struct MissingArtApp: App {
                   }
                   Button("Fix Art") {
                     Task {
-                      guard let script = script else {
+                      guard let script = loadingState.value else {
                         debugPrint("Task is running when button should be disabled.")
                         return
                       }
@@ -140,7 +140,7 @@ struct MissingArtApp: App {
                 }
                 Button("Fix Partial Art") {
                   Task {
-                    guard let script = script else {
+                    guard let script = loadingState.value else {
                       debugPrint("Task is running when button should be disabled.")
                       return
                     }
@@ -179,11 +179,7 @@ struct MissingArtApp: App {
         }
       )
       .task {
-        do {
-          script = try await MissingArtwork.createScript()
-        } catch {
-          reportError(FixArtError.cannotInitializeScript(error))
-        }
+        await loadingState.load()
       }
     }
   }
