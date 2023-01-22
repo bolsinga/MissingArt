@@ -73,7 +73,8 @@ struct MissingArtApp: App {
   }
 
   private func fixArtworkAppleScript(
-    missingImage: (missingArtwork: MissingArtwork, image: NSImage?), scriptHandler: () async throws -> Bool
+    missingImage: (missingArtwork: MissingArtwork, image: NSImage?),
+    scriptHandler: () async throws -> Bool
   ) async {
     await updateProcessingState(
       missingImage.missingArtwork, processingState: .processing)
