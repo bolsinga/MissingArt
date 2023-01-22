@@ -10,7 +10,6 @@ import SwiftUI
 
 private enum FixArtError: Error {
   case cannotFixArtwork(MissingArtwork, Error)
-  case cannotInitializeScript(Error)
 }
 
 extension FixArtError: LocalizedError {
@@ -19,8 +18,6 @@ extension FixArtError: LocalizedError {
     case .cannotFixArtwork(let missingArtwork, let error):
       return
         "Unable to change Music artwork image for \(missingArtwork.description): \(error.localizedDescription)"
-    case .cannotInitializeScript(let error):
-      return "AppleScript Initialization Error: \(error.localizedDescription)"
     }
   }
 
@@ -28,8 +25,6 @@ extension FixArtError: LocalizedError {
     switch self {
     case .cannotFixArtwork(_, _):
       return "The artwork was not able to be fixed. Try running as an AppleScript."
-    case .cannotInitializeScript(_):
-      return "AppleScript cannot be initialized. Use AppleScript Editor to run scripts."
     }
   }
 }
