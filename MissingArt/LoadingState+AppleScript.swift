@@ -23,7 +23,7 @@ extension LoadScriptError: LocalizedError {
   var recoverySuggestion: String? {
     switch self {
     case .cannotInitializeScript(_):
-      return "AppleScript cannot be initialized. Use AppleScript Editor to run scripts."
+      return "AppleScript cannot be initialized. Use the AppleScript Editor to run scripts."
     }
   }
 }

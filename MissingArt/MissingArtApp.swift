@@ -173,6 +173,18 @@ struct MissingArtApp: App {
           Text(error.recoverySuggestion ?? "")
         }
       )
+      .alert(
+        isPresented: .constant(loadingState.isError),
+        error: loadingState.currentError,
+        actions: { error in
+          Button("OK") {
+            loadingState = .idle
+          }
+        },
+        message: { error in
+          Text(error.recoverySuggestion ?? "")
+        }
+      )
       .task {
         await loadingState.load()
       }
