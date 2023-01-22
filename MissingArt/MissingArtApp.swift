@@ -39,7 +39,7 @@ struct MissingArtApp: App {
 
   @State private var script: AppleScript?
 
-  @State private var fixArtError: FixArtError?
+  @State private var fixArtError: Error?
   @State private var processingStates: [MissingArtwork: Description.ProcessingState] = [:]
 
   private func addToPasteboard(string: String = "", image: NSImage? = nil) {
@@ -53,6 +53,17 @@ struct MissingArtApp: App {
     if string.count > 0 {
       pasteboard.setString(string, forType: .string)
     }
+  }
+
+  var hasError: Bool {
+    return fixArtError != nil
+  }
+
+  var currentError: WrappedLocalizedError? {
+    if let error = fixArtError {
+      return WrappedLocalizedError.wrapError(error: error)
+    }
+    return nil
   }
 
   @MainActor private func reportError(_ error: FixArtError) {
@@ -157,7 +168,7 @@ struct MissingArtApp: App {
           }
         }, processingStates: $processingStates
       ).alert(
-        isPresented: .constant(fixArtError != nil), error: fixArtError,
+        isPresented: .constant(hasError), error: currentError,
         actions: { error in
           Button("OK") {
             fixArtError = nil
