@@ -9,10 +9,8 @@ import MissingArtwork
 import SwiftUI
 
 private enum FixArtError: Error {
-  case cannotFixArtwork(MissingArtwork, LocalizedError)
-  case unknownError(MissingArtwork, Error)
-  case cannotInitializeScript(LocalizedError)
-  case unknownScriptInitializationError(Error)
+  case cannotFixArtwork(MissingArtwork, Error)
+  case cannotInitializeScript(Error)
 }
 
 extension FixArtError: LocalizedError {
@@ -20,22 +18,17 @@ extension FixArtError: LocalizedError {
     switch self {
     case .cannotFixArtwork(let missingArtwork, let error):
       return
-        "Unable to change Music artwork image for \(missingArtwork.description): \(error.errorDescription ?? "No Description")"
-    case .unknownError(let missingArtwork, let error):
-      return
-        "Unable to change Music artwork image for \(missingArtwork.description): Unknown: \(String(describing: error))"
+        "Unable to change Music artwork image for \(missingArtwork.description): \(error.localizedDescription)"
     case .cannotInitializeScript(let error):
-      return "AppleScript Initialization Error: \(error.errorDescription ?? "No Description")"
-    case .unknownScriptInitializationError(let error):
-      return "Unknown AppleScript Initialization Error: \(String(describing: error))"
+      return "AppleScript Initialization Error: \(error.localizedDescription)"
     }
   }
 
   var recoverySuggestion: String? {
     switch self {
-    case .cannotFixArtwork(_, _), .unknownError(_, _):
+    case .cannotFixArtwork(_, _):
       return "The artwork was not able to be fixed. Try running as an AppleScript."
-    case .cannotInitializeScript(_), .unknownScriptInitializationError(_):
+    case .cannotInitializeScript(_):
       return "AppleScript cannot be initialized. Use AppleScript Editor to run scripts."
     }
   }
@@ -82,11 +75,9 @@ struct MissingArtApp: App {
     var result: Bool = false
     do {
       result = try await scriptHandler()
-    } catch let error as LocalizedError {
+    } catch {
       await reportError(
         FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
-    } catch {
-      await reportError(FixArtError.unknownError(missingImage.missingArtwork, error))
     }
 
     await updateProcessingState(
@@ -179,10 +170,8 @@ struct MissingArtApp: App {
       .task {
         do {
           script = try await MissingArtwork.createScript()
-        } catch let error as LocalizedError {
-          reportError(FixArtError.cannotInitializeScript(error))
         } catch {
-          reportError(FixArtError.unknownScriptInitializationError(error))
+          reportError(FixArtError.cannotInitializeScript(error))
         }
       }
     }
