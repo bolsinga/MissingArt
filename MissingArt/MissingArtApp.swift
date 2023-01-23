@@ -51,14 +51,14 @@ struct MissingArtApp: App {
   }
 
   var hasError: Bool {
-    return fixArtError != nil
+    return fixArtError != nil || loadingState.isError
   }
 
   var currentError: WrappedLocalizedError? {
     if let error = fixArtError {
       return WrappedLocalizedError.wrapError(error: error)
     }
-    return nil
+    return loadingState.currentError
   }
 
   @MainActor private func reportError(_ error: FixArtError) {
@@ -167,18 +167,9 @@ struct MissingArtApp: App {
         actions: { error in
           Button("OK") {
             fixArtError = nil
-          }
-        },
-        message: { error in
-          Text(error.recoverySuggestion ?? "")
-        }
-      )
-      .alert(
-        isPresented: .constant(loadingState.isError),
-        error: loadingState.currentError,
-        actions: { error in
-          Button("OK") {
-            loadingState = .idle
+            if loadingState.isError {
+              loadingState = .idle
+            }
           }
         },
         message: { error in
