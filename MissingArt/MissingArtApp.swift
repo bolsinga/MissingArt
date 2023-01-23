@@ -10,7 +10,6 @@ import SwiftUI
 
 private enum FixArtError: Error {
   case cannotFixArtwork(MissingArtwork, Error)
-  case cannotInitializeScript(Error)
 }
 
 extension FixArtError: LocalizedError {
@@ -19,8 +18,6 @@ extension FixArtError: LocalizedError {
     case .cannotFixArtwork(let missingArtwork, let error):
       return
         "Unable to change Music artwork image for \(missingArtwork.description): \(error.localizedDescription)"
-    case .cannotInitializeScript(let error):
-      return "AppleScript Initialization Error: \(error.localizedDescription)"
     }
   }
 
@@ -28,8 +25,6 @@ extension FixArtError: LocalizedError {
     switch self {
     case .cannotFixArtwork(_, _):
       return "The artwork was not able to be fixed. Try running as an AppleScript."
-    case .cannotInitializeScript(_):
-      return "AppleScript cannot be initialized. Use AppleScript Editor to run scripts."
     }
   }
 }
@@ -37,7 +32,7 @@ extension FixArtError: LocalizedError {
 @main
 struct MissingArtApp: App {
 
-  @State private var script: AppleScript?
+  @State private var loadingState: LoadingState<AppleScript> = .idle
 
   @State private var fixArtError: Error?
   @State private var processingStates: [MissingArtwork: Description.ProcessingState] = [:]
@@ -56,14 +51,14 @@ struct MissingArtApp: App {
   }
 
   var hasError: Bool {
-    return fixArtError != nil
+    return fixArtError != nil || loadingState.isError
   }
 
   var currentError: WrappedLocalizedError? {
     if let error = fixArtError {
       return WrappedLocalizedError.wrapError(error: error)
     }
-    return nil
+    return loadingState.currentError
   }
 
   @MainActor private func reportError(_ error: FixArtError) {
@@ -118,7 +113,7 @@ struct MissingArtApp: App {
                   }
                   Button("Fix Art") {
                     Task {
-                      guard let script = script else {
+                      guard let script = loadingState.value else {
                         debugPrint("Task is running when button should be disabled.")
                         return
                       }
@@ -140,7 +135,7 @@ struct MissingArtApp: App {
                 }
                 Button("Fix Partial Art") {
                   Task {
-                    guard let script = script else {
+                    guard let script = loadingState.value else {
                       debugPrint("Task is running when button should be disabled.")
                       return
                     }
@@ -172,6 +167,9 @@ struct MissingArtApp: App {
         actions: { error in
           Button("OK") {
             fixArtError = nil
+            if loadingState.isError {
+              loadingState = .idle
+            }
           }
         },
         message: { error in
@@ -179,11 +177,7 @@ struct MissingArtApp: App {
         }
       )
       .task {
-        do {
-          script = try await MissingArtwork.createScript()
-        } catch {
-          reportError(FixArtError.cannotInitializeScript(error))
-        }
+        await loadingState.load()
       }
     }
   }
