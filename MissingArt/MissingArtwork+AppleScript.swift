@@ -37,18 +37,14 @@ extension MissingArtwork {
       """
   }
 
-  private var fixAlbumArtworkHandler: String {
-    "fixAlbumArtwork"
-  }
-
   fileprivate var appleScriptFixPartialArtworkParameters: (String, String, String, String, Bool) {
     let params = appleScriptVerificationParameters
-    return (fixAlbumArtworkHandler, appleScriptSearchRepresentation, params.0, params.1, true)
+    return ("fixAlbumArtworkPartial", appleScriptSearchRepresentation, params.0, params.1, true)
   }
 
   fileprivate var appleScriptFixArtworkParameters: (String, String, String, String, Bool) {
     let params = appleScriptVerificationParameters
-    return (fixAlbumArtworkHandler, appleScriptSearchRepresentation, params.0, params.1, false)
+    return ("fixAlbumArtwork", appleScriptSearchRepresentation, params.0, params.1, false)
   }
 
   private var appleScriptCodeToFixPartialArtworkCall: String {
@@ -91,6 +87,9 @@ extension MissingArtwork {
       end tell
       return matches
     end verifyTrack
+    on fixAlbumArtworkPartial(searchString, albumString, artistString, findImageInTracks)
+      fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks, missing value)
+    end fixAlbumArtworkPartial
     on fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks, externalImageData)
       tell application "Music"
         global findImageHandler

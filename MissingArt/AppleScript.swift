@@ -147,6 +147,7 @@ public actor AppleScript {
     var errorDictionary: NSDictionary?
     let result = script.executeAppleEvent(event, error: &errorDictionary)
     if let errorDictionary {
+      debugPrint("Apple Script Error : \(errorDictionary)")
       throw AppleScriptError.createExecuteAppleEventError(errorDictionary)
     }
     return result.booleanValue
