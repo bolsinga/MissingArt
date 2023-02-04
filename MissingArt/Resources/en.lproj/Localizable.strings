@@ -1,0 +1,30 @@
+/* Menu Action to copy AppleScript to fix album artwork for albums with no artwork. */
+"Copy Art AppleScript" = "Copy Art AppleScript";
+
+/* Menu Action to copy the selected album image. */
+"Copy Artwork Image" = "Copy Artwork Image";
+
+/* Menu Action to copy AppleScript to fix multiple album's artwork for albums with some artwork. */
+"Copy Multiple Partial Art AppleScript" = "Copy Multiple Partial Art AppleScript";
+
+/* Menu Action to copy AppleScript to fix album artwork for albums with some artwork. */
+"Copy Partial Art AppleScript" = "Copy Partial Art AppleScript";
+
+/* Menu Action to fix album artwork when there is no artwork. */
+"Fix Art" = "Fix Art";
+
+/* Menu Action to fix album artwork when there is some artwork. */
+"Fix Partial Art" = "Fix Partial Art";
+
+/* Text shown when no image is selected and the user selects the option to fix the artwork for an album with none. */
+"No Image Selected" = "No Image Selected";
+
+/* Shown when context menu has nothing to do. */
+"Nothing To Do" = "Nothing To Do";
+
+/* OK button for alert shown when there is an unrecoverable error. */
+"OK" = "OK";
+
+/* Text shown when user selects the option to fix artwork for an album with an unknown issue. */
+"Unknown Artwork Issue" = "Unknown Artwork Issue";
+

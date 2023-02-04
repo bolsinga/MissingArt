@@ -97,21 +97,25 @@ struct MissingArtApp: App {
           (missingImages: [(missingArtwork: MissingArtwork, image: NSImage?)]) in
           switch missingImages.count {
           case 0:
-            Text("Nothing To Do")
+            Text("Nothing To Do", comment: "Shown when context menu has nothing to do.")
           case 1:
             if let missingImage = missingImages.first {
               switch missingImage.missingArtwork.availability {
               case .none:
                 if let image = missingImage.image {
-                  Button("Copy Artwork Image") {
+                  Button {
                     addToPasteboard(image: image)
+                  } label: {
+                    Text("Copy Artwork Image", comment: "Menu Action to copy the selected album image.")
                   }
-                  Button("Copy Art AppleScript") {
+                  Button {
                     let appleScript = MissingArtwork.artworksAppleScript(
                       [missingImage.missingArtwork], catchAndLogErrors: true)
                     addToPasteboard(string: appleScript, image: image)
+                  } label: {
+                    Text("Copy Art AppleScript", comment: "Menu Action to copy AppleScript to fix album artwork for albums with no artwork.")
                   }
-                  Button("Fix Art") {
+                  Button {
                     Task {
                       guard let script = loadingState.value else {
                         debugPrint("Task is running when button should be disabled.")
@@ -123,17 +127,25 @@ struct MissingArtApp: App {
                           missingImage.missingArtwork, image: image)
                       }
                     }
+                  } label: {
+                    Text("Fix Art", comment: "Menu Action to fix album artwork when there is no artwork.")
                   }
                 } else {
-                  Text("No Image Selected")
+                  Text(
+                    "No Image Selected",
+                    comment:
+                      "Text shown when no image is selected and the user selects the option to fix the artwork for an album with none."
+                  )
                 }
               case .some:
-                Button("Copy Partial Art AppleScript") {
+                Button {
                   let appleScript = MissingArtwork.partialArtworksAppleScript(
                     [missingImage.missingArtwork], catchAndLogErrors: true)
                   addToPasteboard(string: appleScript)
+                } label: {
+                  Text("Copy Partial Art AppleScript", comment: "Menu Action to copy AppleScript to fix album artwork for albums with some artwork.")
                 }
-                Button("Fix Partial Art") {
+                Button {
                   Task {
                     guard let script = loadingState.value else {
                       debugPrint("Task is running when button should be disabled.")
@@ -143,33 +155,43 @@ struct MissingArtApp: App {
                       return try await script.fixPartialArtwork(missingImage.missingArtwork)
                     }
                   }
+                } label: {
+                  Text("Fix Partial Art", comment: "Menu Action to fix album artwork when there is some artwork.")
                 }
               case .unknown:
-                Text("Unknown Artwork Issue")
+                Text(
+                  "Unknown Artwork Issue",
+                  comment:
+                    "Text shown when user selects the option to fix artwork for an album with an unknown issue."
+                )
               }
             } else {
-              Text("Nothing To Do")
+              fatalError("Count of Missing Images is one, but can't pull off the first item.")
             }
           default:
             let partials = missingImages.filter { $0.missingArtwork.availability == .some }.map {
               $0.missingArtwork
             }
-            Button("Copy Multiple Partial Art AppleScript") {
+            Button {
               let appleScript = MissingArtwork.partialArtworksAppleScript(
                 partials, catchAndLogErrors: true)
 
               addToPasteboard(string: appleScript)
+            } label: {
+              Text("Copy Multiple Partial Art AppleScript", comment: "Menu Action to copy AppleScript to fix multiple album's artwork for albums with some artwork.")
             }.disabled(partials.count == 0)
           }
         }, processingStates: $processingStates
       ).alert(
         isPresented: .constant(hasError), error: currentError,
         actions: { error in
-          Button("OK") {
+          Button {
             fixArtError = nil
             if loadingState.isError {
               loadingState = .idle
             }
+          } label: {
+            Text("OK", comment: "OK button for alert shown when there is an unrecoverable error.")
           }
         },
         message: { error in
