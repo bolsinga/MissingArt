@@ -35,7 +35,7 @@ struct MissingArtApp: App {
   @State private var loadingState: LoadingState<AppleScript> = .idle
 
   @State private var fixArtError: Error?
-  @State private var processingStates: [MissingArtwork: Description.ProcessingState] = [:]
+  @State private var processingStates: [MissingArtwork: ProcessingState] = [:]
 
   private func addToPasteboard(string: String = "", image: NSImage? = nil) {
     let pasteboard = NSPasteboard.general
@@ -66,7 +66,7 @@ struct MissingArtApp: App {
   }
 
   @MainActor private func updateProcessingState(
-    _ missingArtwork: MissingArtwork, processingState: Description.ProcessingState
+    _ missingArtwork: MissingArtwork, processingState: ProcessingState
   ) {
     processingStates[missingArtwork] = processingState
   }
