@@ -106,14 +106,20 @@ struct MissingArtApp: App {
                   Button {
                     addToPasteboard(image: image)
                   } label: {
-                    Text("Copy Artwork Image", comment: "Menu Action to copy the selected album image.")
+                    Text(
+                      "Copy Artwork Image", comment: "Menu Action to copy the selected album image."
+                    )
                   }
                   Button {
                     let appleScript = MissingArtwork.artworksAppleScript(
                       [missingImage.missingArtwork], catchAndLogErrors: true)
                     addToPasteboard(string: appleScript, image: image)
                   } label: {
-                    Text("Copy Art AppleScript", comment: "Menu Action to copy AppleScript to fix album artwork for albums with no artwork.")
+                    Text(
+                      "Copy Art AppleScript",
+                      comment:
+                        "Menu Action to copy AppleScript to fix album artwork for albums with no artwork."
+                    )
                   }
                   Button {
                     Task {
@@ -128,7 +134,9 @@ struct MissingArtApp: App {
                       }
                     }
                   } label: {
-                    Text("Fix Art", comment: "Menu Action to fix album artwork when there is no artwork.")
+                    Text(
+                      "Fix Art",
+                      comment: "Menu Action to fix album artwork when there is no artwork.")
                   }
                 } else {
                   Text(
@@ -143,7 +151,11 @@ struct MissingArtApp: App {
                     [missingImage.missingArtwork], catchAndLogErrors: true)
                   addToPasteboard(string: appleScript)
                 } label: {
-                  Text("Copy Partial Art AppleScript", comment: "Menu Action to copy AppleScript to fix album artwork for albums with some artwork.")
+                  Text(
+                    "Copy Partial Art AppleScript",
+                    comment:
+                      "Menu Action to copy AppleScript to fix album artwork for albums with some artwork."
+                  )
                 }
                 Button {
                   Task {
@@ -156,7 +168,9 @@ struct MissingArtApp: App {
                     }
                   }
                 } label: {
-                  Text("Fix Partial Art", comment: "Menu Action to fix album artwork when there is some artwork.")
+                  Text(
+                    "Fix Partial Art",
+                    comment: "Menu Action to fix album artwork when there is some artwork.")
                 }
               case .unknown:
                 Text(
@@ -178,7 +192,11 @@ struct MissingArtApp: App {
 
               addToPasteboard(string: appleScript)
             } label: {
-              Text("Copy Multiple Partial Art AppleScript", comment: "Menu Action to copy AppleScript to fix multiple album's artwork for albums with some artwork.")
+              Text(
+                "Copy Multiple Partial Art AppleScript",
+                comment:
+                  "Menu Action to copy AppleScript to fix multiple album's artwork for albums with some artwork."
+              )
             }.disabled(partials.count == 0)
           }
         }, processingStates: $processingStates
