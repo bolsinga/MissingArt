@@ -38,22 +38,18 @@ struct MissingArtApp: App {
   }
 
   private func fixArtworkAppleScript(
-    missingImage: (missingArtwork: MissingArtwork, image: NSImage?),
-    scriptHandler: () async throws -> Bool
+    missingArtwork: MissingArtwork, scriptHandler: () async throws -> Bool
   ) async {
-    await updateProcessingState(
-      missingImage.missingArtwork, processingState: .processing)
+    await updateProcessingState(missingArtwork, processingState: .processing)
 
     var result: Bool = false
     do {
       result = try await scriptHandler()
     } catch {
-      await reportError(
-        FixArtError.cannotFixArtwork(missingImage.missingArtwork, error))
+      await reportError(FixArtError.cannotFixArtwork(missingArtwork, error))
     }
 
-    await updateProcessingState(
-      missingImage.missingArtwork, processingState: result ? .success : .failure)
+    await updateProcessingState(missingArtwork, processingState: result ? .success : .failure)
   }
 
   var body: some Scene {
@@ -94,7 +90,7 @@ struct MissingArtApp: App {
                         return
                       }
 
-                      await fixArtworkAppleScript(missingImage: missingImage) {
+                      await fixArtworkAppleScript(missingArtwork: missingImage.missingArtwork) {
                         return try await script.fixArtwork(
                           missingImage.missingArtwork, image: image)
                       }
@@ -129,7 +125,7 @@ struct MissingArtApp: App {
                       debugPrint("Task is running when button should be disabled.")
                       return
                     }
-                    await fixArtworkAppleScript(missingImage: missingImage) {
+                    await fixArtworkAppleScript(missingArtwork: missingImage.missingArtwork) {
                       return try await script.fixPartialArtwork(missingImage.missingArtwork)
                     }
                   }
