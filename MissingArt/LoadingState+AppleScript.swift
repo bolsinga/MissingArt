@@ -16,14 +16,18 @@ extension LoadScriptError: LocalizedError {
   var errorDescription: String? {
     switch self {
     case .cannotInitializeScript(let error):
-      return "AppleScript Initialization Error: \(error.localizedDescription)"
+      return String(
+        localized: "AppleScript Initialization Error: \(error.localizedDescription)",
+        comment: "Error message when AppleScript cannot be initialized by the application.")
     }
   }
 
   var recoverySuggestion: String? {
     switch self {
     case .cannotInitializeScript(_):
-      return "AppleScript cannot be initialized. Use the AppleScript Editor to run scripts."
+      return String(
+        localized: "AppleScript cannot be initialized. Use the AppleScript Editor to run scripts.",
+        comment: "Recovery message when AppleScript cannot be initialized by the application.")
     }
   }
 }

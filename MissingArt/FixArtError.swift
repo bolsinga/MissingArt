@@ -16,15 +16,19 @@ extension FixArtError: LocalizedError {
   var errorDescription: String? {
     switch self {
     case .cannotFixArtwork(let missingArtwork, let error):
-      return
-        "Unable to change Music artwork image for \(missingArtwork.description): \(error.localizedDescription)"
+      return String(
+        localized:
+          "Unable to change Music artwork image for \(missingArtwork.description): \(error.localizedDescription)",
+        comment: "Error message when missing artwork cannot be fixed.")
     }
   }
 
   var recoverySuggestion: String? {
     switch self {
     case .cannotFixArtwork(_, _):
-      return "The artwork was not able to be fixed. Try running as an AppleScript."
+      return String(
+        localized: "The artwork was not able to be fixed. Try running as an AppleScript.",
+        comment: "Recovery message when missing artwork cannot be fixed.")
     }
   }
 }
