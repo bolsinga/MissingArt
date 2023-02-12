@@ -1,3 +1,9 @@
+/* Recovery message when AppleScript cannot be initialized by the application. */
+"AppleScript cannot be initialized. Use the AppleScript Editor to run scripts." = "AppleScript cannot be initialized. Use the AppleScript Editor to run scripts.";
+
+/* Error message when AppleScript cannot be initialized by the application. */
+"AppleScript Initialization Error: %@" = "AppleScript Initialization Error: %@";
+
 /* Menu Action to copy AppleScript to fix album artwork for albums with no artwork. */
 "Copy Art AppleScript" = "Copy Art AppleScript";
 
@@ -24,6 +30,12 @@
 
 /* OK button for alert shown when there is an unrecoverable error. */
 "OK" = "OK";
+
+/* Recovery message when missing artwork cannot be fixed. */
+"The artwork was not able to be fixed. Try running as an AppleScript." = "The artwork was not able to be fixed. Try running as an AppleScript.";
+
+/* Error message when missing artwork cannot be fixed. */
+"Unable to change Music artwork image for %@: %@" = "Unable to change Music artwork image for %@: %@";
 
 /* Text shown when user selects the option to fix artwork for an album with an unknown issue. */
 "Unknown Artwork Issue" = "Unknown Artwork Issue";
