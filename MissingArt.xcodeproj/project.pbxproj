@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FE21F50C298DD81800605465 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FE21F50A298DD81800605465 /* Localizable.strings */; };
 		FE21F512299754D100605465 /* FixArtError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE21F511299754D100605465 /* FixArtError.swift */; };
+		FE21F51429998CC800605465 /* NSPasteboard+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE21F51329998CC800605465 /* NSPasteboard+Convenience.swift */; };
 		FE57696F294509200041E18D /* MissingArtwork+AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */; };
 		FE57697629494EA40041E18D /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57697529494EA40041E18D /* AppleScript.swift */; };
 		FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		FE21F50B298DD81800605465 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FE21F511299754D100605465 /* FixArtError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FixArtError.swift; sourceTree = "<group>"; };
+		FE21F51329998CC800605465 /* NSPasteboard+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Convenience.swift"; sourceTree = "<group>"; };
 		FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MissingArtwork+AppleScript.swift"; sourceTree = "<group>"; };
 		FE57697529494EA40041E18D /* AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleScript.swift; sourceTree = "<group>"; };
 		FE6D2C4B27FF54670056FA7E /* MissingArt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MissingArt.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,6 +70,7 @@
 				FE57697529494EA40041E18D /* AppleScript.swift */,
 				FE8BA47D297DA92F00FD0823 /* LoadingState+AppleScript.swift */,
 				FE21F511299754D100605465 /* FixArtError.swift */,
+				FE21F51329998CC800605465 /* NSPasteboard+Convenience.swift */,
 				FE6D2C5227FF54680056FA7E /* Assets.xcassets */,
 				FE6D2C5727FF54680056FA7E /* MissingArt.entitlements */,
 				FE21F50A298DD81800605465 /* Localizable.strings */,
@@ -168,6 +171,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE21F51429998CC800605465 /* NSPasteboard+Convenience.swift in Sources */,
 				FE57696F294509200041E18D /* MissingArtwork+AppleScript.swift in Sources */,
 				FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */,
 				FE8BA47E297DA92F00FD0823 /* LoadingState+AppleScript.swift in Sources */,
@@ -177,6 +181,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FE95DA4B28121B5E009B0209 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = FE95DA4A28121B5E009B0209 /* MissingArtwork */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		FE21F50A298DD81800605465 /* Localizable.strings */ = {
