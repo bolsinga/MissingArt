@@ -16,19 +16,6 @@ struct MissingArtApp: App {
   @State private var fixArtError: Error?
   @State private var processingStates: [MissingArtwork: ProcessingState] = [:]
 
-  private func addToPasteboard(string: String = "", image: NSImage? = nil) {
-    let pasteboard = NSPasteboard.general
-    pasteboard.clearContents()
-
-    // Put the image on the clipboard first, then the text.
-    if let image {
-      pasteboard.writeObjects([image])
-    }
-    if string.count > 0 {
-      pasteboard.setString(string, forType: .string)
-    }
-  }
-
   var hasError: Bool {
     return fixArtError != nil || loadingState.isError
   }
@@ -83,7 +70,7 @@ struct MissingArtApp: App {
               case .none:
                 if let image = missingImage.image {
                   Button {
-                    addToPasteboard(image: image)
+                    NSPasteboard.general.add(image: image)
                   } label: {
                     Text(
                       "Copy Artwork Image", comment: "Menu Action to copy the selected album image."
@@ -92,7 +79,7 @@ struct MissingArtApp: App {
                   Button {
                     let appleScript = MissingArtwork.artworksAppleScript(
                       [missingImage.missingArtwork], catchAndLogErrors: true)
-                    addToPasteboard(string: appleScript, image: image)
+                    NSPasteboard.general.add(string: appleScript, image: image)
                   } label: {
                     Text(
                       "Copy Art AppleScript",
@@ -128,7 +115,7 @@ struct MissingArtApp: App {
                 Button {
                   let appleScript = MissingArtwork.partialArtworksAppleScript(
                     [missingImage.missingArtwork], catchAndLogErrors: true)
-                  addToPasteboard(string: appleScript)
+                  NSPasteboard.general.add(string: appleScript)
                 } label: {
                   Text(
                     "Copy Partial Art AppleScript",
@@ -169,7 +156,7 @@ struct MissingArtApp: App {
               let appleScript = MissingArtwork.partialArtworksAppleScript(
                 partials, catchAndLogErrors: true)
 
-              addToPasteboard(string: appleScript)
+              NSPasteboard.general.add(string: appleScript)
             } label: {
               Text(
                 "Copy Multiple Partial Art AppleScript",
