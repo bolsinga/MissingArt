@@ -73,8 +73,9 @@ struct MissingArtApp: App {
                     )
                   }
                   Button {
-                    let appleScript = MissingArtwork.artworksAppleScript(
-                      [missingImage.missingArtwork], catchAndLogErrors: true)
+                    let appleScript = MissingArtwork.artworksAppleScript([
+                      missingImage.missingArtwork
+                    ])
                     NSPasteboard.general.add(string: appleScript, image: image)
                   } label: {
                     Text(
@@ -109,8 +110,9 @@ struct MissingArtApp: App {
                 }
               case .some:
                 Button {
-                  let appleScript = MissingArtwork.partialArtworksAppleScript(
-                    [missingImage.missingArtwork], catchAndLogErrors: true)
+                  let appleScript = MissingArtwork.partialArtworksAppleScript([
+                    missingImage.missingArtwork
+                  ])
                   NSPasteboard.general.add(string: appleScript)
                 } label: {
                   Text(
@@ -149,9 +151,7 @@ struct MissingArtApp: App {
               $0.missingArtwork
             }
             Button {
-              let appleScript = MissingArtwork.partialArtworksAppleScript(
-                partials, catchAndLogErrors: true)
-
+              let appleScript = MissingArtwork.partialArtworksAppleScript(partials)
               NSPasteboard.general.add(string: appleScript)
             } label: {
               Text(
