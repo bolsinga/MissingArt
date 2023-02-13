@@ -144,32 +144,22 @@ extension MissingArtwork {
     """
 
   private static func _artworksAppleScript(
-    _ missingArtworks: [MissingArtwork],
-    catchAndLogErrors: Bool,
-    caller: ((MissingArtwork) -> String)
+    _ missingArtworks: [MissingArtwork], caller: ((MissingArtwork) -> String)
   ) -> String {
     var appleScript = """
       \(appleScriptFixAlbumArtFunctionDefinition)
 
       """
     for missingArtwork in missingArtworks {
-      if catchAndLogErrors {
-        appleScript.append(
-          """
-          try
-            \(caller(missingArtwork))
-          on error errorString
-            log \"Error Trying to Fix Artwork: \" & errorString
-          end try
+      appleScript.append(
+        """
+        try
+          \(caller(missingArtwork))
+        on error errorString
+          log \"Error Trying to Fix Artwork: \" & errorString
+        end try
 
-          """)
-      } else {
-        appleScript.append(
-          """
-            \(caller(missingArtwork))
-
-          """)
-      }
+        """)
     }
     appleScript.append(
       """
@@ -178,19 +168,15 @@ extension MissingArtwork {
     return appleScript
   }
 
-  public static func partialArtworksAppleScript(
-    _ missingArtworks: [MissingArtwork], catchAndLogErrors: Bool
-  ) -> String {
-    return _artworksAppleScript(missingArtworks, catchAndLogErrors: catchAndLogErrors) {
+  public static func partialArtworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
+    return _artworksAppleScript(missingArtworks) {
       missingArtwork in
       missingArtwork.appleScriptCodeToFixPartialArtworkCall
     }
   }
 
-  public static func artworksAppleScript(
-    _ missingArtworks: [MissingArtwork], catchAndLogErrors: Bool
-  ) -> String {
-    return _artworksAppleScript(missingArtworks, catchAndLogErrors: catchAndLogErrors) {
+  public static func artworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
+    return _artworksAppleScript(missingArtworks) {
       missingArtwork in
       missingArtwork.appleScriptCodeToFixArtworkCall
     }
