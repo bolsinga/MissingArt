@@ -182,13 +182,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		FE95DA4B28121B5E009B0209 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = FE95DA4A28121B5E009B0209 /* MissingArtwork */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		FE21F50A298DD81800605465 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
@@ -331,6 +324,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Missing Artwork";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Missing Artwork uses AppleEvents to fix artwork images.";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Missing Artwork uses Apple Music to find artwork images.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -361,6 +355,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Missing Artwork";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Missing Artwork uses AppleEvents to fix artwork images.";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Missing Artwork uses Apple Music to find artwork images.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
