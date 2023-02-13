@@ -52,115 +52,84 @@ struct MissingArtApp: App {
     await updateProcessingState(missingArtwork, processingState: result ? .success : .failure)
   }
 
+  @ViewBuilder private var copyAppleScriptLabel: some View {
+    Text(
+      "Copy Fix Art AppleScript",
+      comment:
+        "Menu Action to copy AppleScript to fix album artwork."
+    )
+  }
+
+  @ViewBuilder private var fixLabel: some View {
+    Text(
+      "Fix Art",
+      comment: "Menu Action to fix album artwork in process.")
+  }
+
   var body: some Scene {
     WindowGroup {
       MissingArtworkView(
-        imageContextMenuBuilder: {
-          (missingImages: [(missingArtwork: MissingArtwork, image: NSImage?)]) in
-          switch missingImages.count {
-          case 0:
-            Text("Nothing To Do", comment: "Shown when context menu has nothing to do.")
-          case 1:
-            if let missingImage = missingImages.first {
-              switch missingImage.missingArtwork.availability {
-              case .none:
-                if let image = missingImage.image {
-                  Button {
-                    NSPasteboard.general.add(image: image)
-                  } label: {
-                    Text(
-                      "Copy Artwork Image", comment: "Menu Action to copy the selected album image."
-                    )
-                  }
-                  Button {
-                    let appleScript = MissingArtwork.artworksAppleScript([
-                      missingImage.missingArtwork
-                    ])
-                    NSPasteboard.general.add(string: appleScript, image: image)
-                  } label: {
-                    Text(
-                      "Copy Art AppleScript",
-                      comment:
-                        "Menu Action to copy AppleScript to fix album artwork for albums with no artwork."
-                    )
-                  }
-                  Button {
-                    Task {
-                      guard let script = loadingState.value else {
-                        debugPrint("Task is running when button should be disabled.")
-                        return
-                      }
-
-                      await fixArtworkAppleScript(missingArtwork: missingImage.missingArtwork) {
-                        return try await script.fixArtwork(
-                          missingImage.missingArtwork, image: image)
-                      }
-                    }
-                  } label: {
-                    Text(
-                      "Fix Art",
-                      comment: "Menu Action to fix album artwork when there is no artwork.")
-                  }
-                } else {
-                  Text(
-                    "No Image Selected",
-                    comment:
-                      "Text shown when no image is selected and the user selects the option to fix the artwork for an album with none."
-                  )
-                }
-              case .some:
-                Button {
-                  let appleScript = MissingArtwork.partialArtworksAppleScript([
-                    missingImage.missingArtwork
-                  ])
-                  NSPasteboard.general.add(string: appleScript)
-                } label: {
-                  Text(
-                    "Copy Partial Art AppleScript",
-                    comment:
-                      "Menu Action to copy AppleScript to fix album artwork for albums with some artwork."
-                  )
-                }
-                Button {
-                  Task {
-                    guard let script = loadingState.value else {
-                      debugPrint("Task is running when button should be disabled.")
-                      return
-                    }
-                    await fixArtworkAppleScript(missingArtwork: missingImage.missingArtwork) {
-                      return try await script.fixPartialArtwork(missingImage.missingArtwork)
-                    }
-                  }
-                } label: {
-                  Text(
-                    "Fix Partial Art",
-                    comment: "Menu Action to fix album artwork when there is some artwork.")
-                }
-              case .unknown:
-                Text(
-                  "Unknown Artwork Issue",
-                  comment:
-                    "Text shown when user selects the option to fix artwork for an album with an unknown issue."
-                )
-              }
-            } else {
-              fatalError("Count of Missing Images is one, but can't pull off the first item.")
-            }
-          default:
-            let partials = missingImages.filter { $0.missingArtwork.availability == .some }.map {
-              $0.missingArtwork
-            }
+        noArtworkContextMenuBuilder: {
+          (missingImages: [(missingArtwork: MissingArtwork, image: NSImage)]) in
+          if missingImages.count == 1, let missingImage = missingImages.first {
             Button {
-              let appleScript = MissingArtwork.partialArtworksAppleScript(partials)
-              NSPasteboard.general.add(string: appleScript)
+              NSPasteboard.general.add(image: missingImage.image)
             } label: {
               Text(
-                "Copy Multiple Partial Art AppleScript",
-                comment:
-                  "Menu Action to copy AppleScript to fix multiple album's artwork for albums with some artwork."
+                "Copy Artwork Image", comment: "Menu Action to copy the selected album image."
               )
-            }.disabled(partials.count == 0)
+            }
+
+            Button {
+              let appleScript = MissingArtwork.artworksAppleScript([missingImage.missingArtwork])
+              NSPasteboard.general.add(string: appleScript, image: missingImage.image)
+            } label: {
+              copyAppleScriptLabel
+            }
           }
+
+          Button {
+            Task {
+              guard let script = loadingState.value else {
+                debugPrint("Task is running when button should be disabled.")
+                return
+              }
+
+              for missingImage in missingImages {
+                await fixArtworkAppleScript(missingArtwork: missingImage.missingArtwork) {
+                  return try await script.fixArtwork(
+                    missingImage.missingArtwork, image: missingImage.image)
+                }
+              }
+            }
+          } label: {
+            fixLabel
+          }.disabled(missingImages.count == 0)
+        },
+        partialArtworkContextMenuBuilder: { missingArtworks in
+          Button {
+            let appleScript = MissingArtwork.partialArtworksAppleScript(missingArtworks)
+            NSPasteboard.general.add(string: appleScript)
+          } label: {
+            copyAppleScriptLabel
+          }.disabled(missingArtworks.count == 0)
+
+          Button {
+            Task {
+              guard let script = loadingState.value else {
+                debugPrint("Task is running when button should be disabled.")
+                return
+              }
+              for missingArtwork in missingArtworks {
+                await fixArtworkAppleScript(missingArtwork: missingArtwork) {
+                  return try await script.fixPartialArtwork(missingArtwork)
+                }
+              }
+            }
+          } label: {
+            fixLabel
+          }.disabled(missingArtworks.count == 0)
+
         }, processingStates: $processingStates
       ).alert(
         isPresented: .constant(hasError), error: currentError,
