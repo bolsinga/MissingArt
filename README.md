@@ -6,3 +6,5 @@ MissingArt is the app that uses [itunes_missing_artwork](https://github.com/bols
 This separate Xcode project repository is necessary. The Xcode project can set up the proper code signing and entitlements that are not (easily?) available via Swift Packages. Pretty much the entire application is in the Swift Package however.
 
 You will have to code sign with your Developer Identity, and follow the MusicKit instructions to allow your app to access MusicKit API.
+
+[Privacy Policy](https://www.bolsinga.com/missingart-privacy/)
