@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LoadingState
 import MissingArtwork
 
 private enum LoadScriptError: Error {
