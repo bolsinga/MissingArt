@@ -69,7 +69,28 @@ struct MissingArtApp: App {
 
   var body: some Scene {
     WindowGroup {
-      MissingArtworkView(
+      MissingArtworkView(processingStates: $processingStates)
+        .alert(
+          isPresented: .constant(hasError), error: currentError,
+          actions: { error in
+            Button {
+              fixArtError = nil
+              if loadingState.isError {
+                loadingState = .idle
+              }
+            } label: {
+              Text("OK", comment: "OK button for alert shown when there is an unrecoverable error.")
+            }
+          },
+          message: { error in
+            Text(error.recoverySuggestion ?? "")
+          }
+        )
+        .task {
+          await loadingState.load()
+        }
+    }.commands {
+      MissingArtworkCommands(
         noArtworkContextMenuBuilder: {
           (missingImages: [(missingArtwork: MissingArtwork, image: NSImage)]) in
           if missingImages.count == 1, let missingImage = missingImages.first {
@@ -130,27 +151,8 @@ struct MissingArtApp: App {
           } label: {
             fixLabel
           }.disabled(missingArtworks.count == 0)
-
-        }, processingStates: $processingStates
-      ).alert(
-        isPresented: .constant(hasError), error: currentError,
-        actions: { error in
-          Button {
-            fixArtError = nil
-            if loadingState.isError {
-              loadingState = .idle
-            }
-          } label: {
-            Text("OK", comment: "OK button for alert shown when there is an unrecoverable error.")
-          }
-        },
-        message: { error in
-          Text(error.recoverySuggestion ?? "")
         }
       )
-      .task {
-        await loadingState.load()
-      }
     }
   }
 }
