@@ -28,29 +28,29 @@ struct MissingArtApp: App {
     return loadingState.currentError
   }
 
-  @MainActor private func reportError(_ error: FixArtError) {
+  private func reportError(_ error: FixArtError) {
     fixArtError = error
   }
 
-  @MainActor private func updateProcessingState(
+  private func updateProcessingState(
     _ missingArtwork: MissingArtwork, processingState: ProcessingState
   ) {
     processingStates[missingArtwork] = processingState
   }
 
   private func fixArtworkAppleScript(
-    missingArtwork: MissingArtwork, scriptHandler: () async throws -> Bool
-  ) async {
-    await updateProcessingState(missingArtwork, processingState: .processing)
+    missingArtwork: MissingArtwork, scriptHandler: () throws -> Bool
+  ) {
+    updateProcessingState(missingArtwork, processingState: .processing)
 
     var result: Bool = false
     do {
-      result = try await scriptHandler()
+      result = try scriptHandler()
     } catch {
-      await reportError(FixArtError.cannotFixArtwork(missingArtwork, error))
+      reportError(FixArtError.cannotFixArtwork(missingArtwork, error))
     }
 
-    await updateProcessingState(missingArtwork, processingState: result ? .success : .failure)
+    updateProcessingState(missingArtwork, processingState: result ? .success : .failure)
   }
 
   @ViewBuilder private var copyAppleScriptLabel: some View {
@@ -118,8 +118,8 @@ struct MissingArtApp: App {
               }
 
               for missingImage in missingImages {
-                await fixArtworkAppleScript(missingArtwork: missingImage.missingArtwork) {
-                  return try await script.fixArtwork(
+                fixArtworkAppleScript(missingArtwork: missingImage.missingArtwork) {
+                  return try script.fixArtwork(
                     missingImage.missingArtwork, image: missingImage.image)
                 }
               }
@@ -143,8 +143,8 @@ struct MissingArtApp: App {
                 return
               }
               for missingArtwork in missingArtworks {
-                await fixArtworkAppleScript(missingArtwork: missingArtwork) {
-                  return try await script.fixPartialArtwork(missingArtwork)
+                fixArtworkAppleScript(missingArtwork: missingArtwork) {
+                  return try script.fixPartialArtwork(missingArtwork)
                 }
               }
             }

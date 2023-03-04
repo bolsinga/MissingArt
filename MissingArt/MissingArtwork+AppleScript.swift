@@ -190,14 +190,14 @@ extension MissingArtwork {
 }
 
 extension AppleScript {
-  func fixPartialArtwork(_ missingArtwork: MissingArtwork) async throws -> Bool {
+  func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws -> Bool {
     let params = missingArtwork.appleScriptFixPartialArtworkParameters
     return try self.run(
       handler: params.0,
       parameters: params.1, params.2, params.3, params.4)
   }
 
-  func fixArtwork(_ missingArtwork: MissingArtwork, image: NSImage) async throws -> Bool {
+  func fixArtwork(_ missingArtwork: MissingArtwork, image: NSImage) throws -> Bool {
     let params = missingArtwork.appleScriptFixArtworkParameters
     return try self.run(
       handler: params.0, parameters: params.1, params.2, params.3, params.4, image)
