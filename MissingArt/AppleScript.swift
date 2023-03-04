@@ -105,7 +105,7 @@ extension AppleScriptError: LocalizedError {
   }
 }
 
-public actor AppleScript {
+public struct AppleScript {
   private var script: NSAppleScript
 
   public init(source: String) throws {
@@ -119,15 +119,6 @@ public actor AppleScript {
     } else {
       script = exec
     }
-  }
-
-  public func run() throws -> Bool {
-    var errorDictionary: NSDictionary?
-    let result = script.executeAndReturnError(&errorDictionary)
-    if let errorDictionary {
-      throw AppleScriptError.createExecuteError(errorDictionary)
-    }
-    return result.booleanValue
   }
 
   private func run(handler: String, parameters: NSAppleEventDescriptor) throws -> Bool {
