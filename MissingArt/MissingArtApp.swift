@@ -101,6 +101,7 @@ struct MissingArtApp: App {
                 "Copy Artwork Image", comment: "Menu Action to copy the selected album image."
               )
             }
+            .keyboardShortcut(KeyboardShortcut(KeyEquivalent("c"), modifiers: [.command, .option]))
 
             Button {
               let appleScript = MissingArtwork.artworksAppleScript([missingImage.missingArtwork])
@@ -126,7 +127,9 @@ struct MissingArtApp: App {
             }
           } label: {
             fixLabel
-          }.disabled(missingImages.count == 0)
+          }
+          .disabled(missingImages.count == 0)
+          .keyboardShortcut(KeyboardShortcut(KeyEquivalent("n"), modifiers: [.command, .option]))
         },
         partialArtworkContextMenuBuilder: { missingArtworks in
           Button {
@@ -150,7 +153,9 @@ struct MissingArtApp: App {
             }
           } label: {
             fixLabel
-          }.disabled(missingArtworks.count == 0)
+          }
+          .disabled(missingArtworks.count == 0)
+          .keyboardShortcut(KeyboardShortcut(KeyEquivalent("p"), modifiers: [.command, .option]))
         }
       )
     }
