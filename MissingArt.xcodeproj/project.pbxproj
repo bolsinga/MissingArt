@@ -186,13 +186,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		FE95DA4B28121B5E009B0209 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = FE95DA4A28121B5E009B0209 /* MissingArtwork */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		FE21F50A298DD81800605465 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
@@ -410,8 +403,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bolsinga/LoadingState";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = exactVersion;
+				version = 1.0.0;
 			};
 		};
 		FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */ = {
