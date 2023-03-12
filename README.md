@@ -7,7 +7,7 @@ When the application is launched, it will read your Music application data, look
 
 ## Developers
 
-Missing Artwork is the app that uses [iTunes Missing Artwork](https://github.com/bolsinga/itunes_missing_artwork).
+Missing Artwork is an app that uses [iTunes Missing Artwork](https://github.com/bolsinga/itunes_missing_artwork).
 
 This separate Xcode project application is necessary. The Xcode project can set up the proper code signing and entitlements that are not readily available via Swift Packages. The logic for finding and displaying the missing artwork is in [iTunes Missing Artwork](https://github.com/bolsinga/itunes_missing_artwork). The code that repairs the media is delegated to the application via properties on `MissingArtworkCommands`. Use `MissingArtworkView` as your main `View` for your application's `Scene`.
 
