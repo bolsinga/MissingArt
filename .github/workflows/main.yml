@@ -1,4 +1,4 @@
-name: xcodebuild
+name: push-and-prs-on-main
 
 on:
   push:
