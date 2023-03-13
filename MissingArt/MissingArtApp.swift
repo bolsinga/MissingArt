@@ -92,10 +92,10 @@ struct MissingArtApp: App {
     }.commands {
       MissingArtworkCommands(
         noArtworkContextMenuBuilder: {
-          (missingImages: [(missingArtwork: MissingArtwork, image: NSImage)]) in
+          (missingImages: [(missingArtwork: MissingArtwork, image: PlatformImage)]) in
           if missingImages.count == 1, let missingImage = missingImages.first {
             Button {
-              NSPasteboard.general.add(image: missingImage.image)
+              NSPasteboard.general.add(image: missingImage.image.image)
             } label: {
               Text(
                 "Copy Artwork Image", comment: "Menu Action to copy the selected album image."
@@ -105,7 +105,7 @@ struct MissingArtApp: App {
 
             Button {
               let appleScript = MissingArtwork.artworksAppleScript([missingImage.missingArtwork])
-              NSPasteboard.general.add(string: appleScript, image: missingImage.image)
+              NSPasteboard.general.add(string: appleScript, image: missingImage.image.image)
             } label: {
               copyAppleScriptLabel
             }
@@ -121,7 +121,7 @@ struct MissingArtApp: App {
               for missingImage in missingImages {
                 fixArtworkAppleScript(missingArtwork: missingImage.missingArtwork) {
                   return try script.fixArtwork(
-                    missingImage.missingArtwork, image: missingImage.image)
+                    missingImage.missingArtwork, image: missingImage.image.image)
                 }
               }
             }
