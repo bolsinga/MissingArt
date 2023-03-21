@@ -31,6 +31,7 @@
 		FE6D2C5227FF54680056FA7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE6D2C5527FF54680056FA7E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FE6D2C5727FF54680056FA7E /* MissingArt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MissingArt.entitlements; sourceTree = "<group>"; };
+		FE8A3F6929CA28F600D58741 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FE8BA47D297DA92F00FD0823 /* LoadingState+AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadingState+AppleScript.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,6 +68,7 @@
 		FE6D2C4D27FF54670056FA7E /* MissingArt */ = {
 			isa = PBXGroup;
 			children = (
+				FE8A3F6929CA28F600D58741 /* Info.plist */,
 				FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */,
 				FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */,
 				FE57697529494EA40041E18D /* AppleScript.swift */,
@@ -322,11 +324,12 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"MissingArt/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MissingArt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Missing Artwork";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Missing Artwork uses AppleEvents to fix artwork images.";
@@ -353,11 +356,12 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"MissingArt/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MissingArt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Missing Artwork";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Missing Artwork uses AppleEvents to fix artwork images.";
