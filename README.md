@@ -3,7 +3,7 @@
 
 Missing Artwork is a macOS application that will find music media in Music.app that does not have artwork. It will also find albums where some files have artwork and some do not. Once these have been identified, the application can fix the artwork in Music.app for you.
 
-When the application is launched, it will read your Music application data, looking for music media with broken artwork. It will then display all the items found. Once an item is selected from the list, it will attempt to load artwork from Apple's Music Catalog. Select the image you wish to use for the repair. From the Repair Menu, you can then choose to fix the Partial Artwork or fix No Artwork media, depending upon what you selected. You can also copy the AppleScript code used to do the repair work.
+When the application is launched, it will read your Music application data, looking for music media with broken artwork. It will then display all the items found. Some are items with No Artwork, some are items whose album files do not all have artwork, called Partial Artworks. Once an item with No Artwork is selected from the list, it will attempt to load artwork from Apple's Music Catalog. Select the image you wish to use for the repair. If an item with Partial Artwork is selected, it will show the image already found. From the Repair Menu, you can then choose to fix the Partial Artwork or fix No Artwork media, depending upon what you selected. You can also copy the AppleScript code used to do the repair work.
 
 ## Developers
 
