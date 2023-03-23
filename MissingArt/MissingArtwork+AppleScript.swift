@@ -71,7 +71,9 @@ extension MissingArtwork {
         repeat with trk in results
           if (count of artworks of trk) is not 0 then
             set imageData to data of item 1 of artworks of trk
-            exit repeat
+            if imageData is not missing value then
+              exit repeat
+            end if
           end if
         end repeat
       end tell
