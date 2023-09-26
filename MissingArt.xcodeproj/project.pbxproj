@@ -18,7 +18,6 @@
 		FE6D2C5627FF54680056FA7E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5527FF54680056FA7E /* Preview Assets.xcassets */; };
 		FE8BA47E297DA92F00FD0823 /* LoadingState+AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8BA47D297DA92F00FD0823 /* LoadingState+AppleScript.swift */; };
 		FE95DA48281216E1009B0209 /* MissingArtwork in Frameworks */ = {isa = PBXBuildFile; productRef = FE95DA47281216E1009B0209 /* MissingArtwork */; };
-		FE9910E22AC33D2E0054D229 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = FE9910E12AC33D2D0054D229 /* Config.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,7 +33,6 @@
 		FE6D2C5727FF54680056FA7E /* MissingArt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MissingArt.entitlements; sourceTree = "<group>"; };
 		FE8A3F6929CA28F600D58741 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FE8BA47D297DA92F00FD0823 /* LoadingState+AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadingState+AppleScript.swift"; sourceTree = "<group>"; };
-		FE9910E12AC33D2D0054D229 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +51,6 @@
 		FE6D2C4227FF54670056FA7E = {
 			isa = PBXGroup;
 			children = (
-				FE9910E12AC33D2D0054D229 /* Config.xcconfig */,
 				FE6D2C4D27FF54670056FA7E /* MissingArt */,
 				FE6D2C4C27FF54670056FA7E /* Products */,
 				FE6D2C6127FF551F0056FA7E /* Frameworks */,
@@ -167,7 +164,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE9910E22AC33D2E0054D229 /* Config.xcconfig in Resources */,
 				FE6D2C5627FF54680056FA7E /* Preview Assets.xcassets in Resources */,
 				FE21F50C298DD81800605465 /* Localizable.strings in Resources */,
 				FE6D2C5327FF54680056FA7E /* Assets.xcassets in Resources */,
@@ -325,7 +321,6 @@
 		};
 		FE6D2C5B27FF54680056FA7E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FE9910E12AC33D2D0054D229 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -335,7 +330,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"MissingArt/Preview Content\"";
-				DEVELOPMENT_TEAM = "$(inherited)";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -359,7 +353,6 @@
 		};
 		FE6D2C5C27FF54680056FA7E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FE9910E12AC33D2D0054D229 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
