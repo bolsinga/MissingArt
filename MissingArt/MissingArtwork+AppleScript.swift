@@ -5,6 +5,7 @@
 //  Created by Greg Bolsinga on 12/10/22.
 //
 
+#if canImport(AppKit)
 import AppKit
 import Foundation
 import MissingArtwork
@@ -205,3 +206,4 @@ extension AppleScript {
       handler: params.0, parameters: params.1, params.2, params.3, params.4, image)
   }
 }
+#endif

@@ -5,6 +5,7 @@
 //  Created by Greg Bolsinga on 2/12/23.
 //
 
+#if canImport(AppKit)
 import AppKit
 
 extension NSPasteboard {
@@ -20,3 +21,4 @@ extension NSPasteboard {
     }
   }
 }
+#endif

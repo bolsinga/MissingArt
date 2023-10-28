@@ -5,6 +5,7 @@
 //  Created by Greg Bolsinga on 1/22/23.
 //
 
+#if canImport(AppKit)
 import Foundation
 import LoadingState
 import MissingArtwork
@@ -50,3 +51,4 @@ extension LoadingState where Value == AppleScript {
     }
   }
 }
+#endif
