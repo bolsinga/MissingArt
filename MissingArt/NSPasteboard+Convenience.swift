@@ -6,19 +6,19 @@
 //
 
 #if canImport(AppKit)
-import AppKit
+  import AppKit
 
-extension NSPasteboard {
-  func add(string: String = "", image: NSImage? = nil) {
-    self.clearContents()
+  extension NSPasteboard {
+    func add(string: String = "", image: NSImage? = nil) {
+      self.clearContents()
 
-    // Put the image on the clipboard first, then the text.
-    if let image {
-      self.writeObjects([image])
-    }
-    if !string.isEmpty {
-      self.setString(string, forType: .string)
+      // Put the image on the clipboard first, then the text.
+      if let image {
+        self.writeObjects([image])
+      }
+      if !string.isEmpty {
+        self.setString(string, forType: .string)
+      }
     }
   }
-}
 #endif

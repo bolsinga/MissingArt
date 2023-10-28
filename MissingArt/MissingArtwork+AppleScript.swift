@@ -6,204 +6,206 @@
 //
 
 #if canImport(AppKit)
-import AppKit
-import Foundation
-import MissingArtwork
+  import AppKit
+  import Foundation
+  import MissingArtwork
 
-extension String {
-  fileprivate var escapeQuotes: String {
-    self.replacingOccurrences(of: "\"", with: "\\\"")
-  }
-}
-
-extension MissingArtwork {
-  private var appleScriptSearchRepresentation: String {
-    "\(simpleRepresentation)".escapeQuotes
-  }
-
-  private var appleScriptVerificationParameters: (String, String) {
-    switch self {
-    case .ArtistAlbum(let artist, let album, _):
-      return (album.escapeQuotes, artist.escapeQuotes)
-    case .CompilationAlbum(let album, _):
-      return (album.escapeQuotes, "")
+  extension String {
+    fileprivate var escapeQuotes: String {
+      self.replacingOccurrences(of: "\"", with: "\\\"")
     }
   }
 
-  private func appleScriptCodeToFixArtworkCall(_ parameters: (String, String, String, String, Bool))
-    -> String
-  {
-    return """
-          \(parameters.0)(\"\(parameters.1)\", \"\(parameters.2)\", \"\(parameters.3)\", \(parameters.4), missing value)
-      """
+  extension MissingArtwork {
+    private var appleScriptSearchRepresentation: String {
+      "\(simpleRepresentation)".escapeQuotes
+    }
+
+    private var appleScriptVerificationParameters: (String, String) {
+      switch self {
+      case .ArtistAlbum(let artist, let album, _):
+        return (album.escapeQuotes, artist.escapeQuotes)
+      case .CompilationAlbum(let album, _):
+        return (album.escapeQuotes, "")
+      }
+    }
+
+    private func appleScriptCodeToFixArtworkCall(
+      _ parameters: (String, String, String, String, Bool)
+    )
+      -> String
+    {
+      return """
+            \(parameters.0)(\"\(parameters.1)\", \"\(parameters.2)\", \"\(parameters.3)\", \(parameters.4), missing value)
+        """
+    }
+
+    fileprivate var appleScriptFixPartialArtworkParameters: (String, String, String, String, Bool) {
+      let params = appleScriptVerificationParameters
+      return ("fixAlbumArtworkPartial", appleScriptSearchRepresentation, params.0, params.1, true)
+    }
+
+    fileprivate var appleScriptFixArtworkParameters: (String, String, String, String, Bool) {
+      let params = appleScriptVerificationParameters
+      return ("fixAlbumArtwork", appleScriptSearchRepresentation, params.0, params.1, false)
+    }
+
+    private var appleScriptCodeToFixPartialArtworkCall: String {
+      return appleScriptCodeToFixArtworkCall(appleScriptFixPartialArtworkParameters)
+    }
+
+    private var appleScriptCodeToFixArtworkCall: String {
+      return appleScriptCodeToFixArtworkCall(appleScriptFixArtworkParameters)
+    }
   }
 
-  fileprivate var appleScriptFixPartialArtworkParameters: (String, String, String, String, Bool) {
-    let params = appleScriptVerificationParameters
-    return ("fixAlbumArtworkPartial", appleScriptSearchRepresentation, params.0, params.1, true)
-  }
-
-  fileprivate var appleScriptFixArtworkParameters: (String, String, String, String, Bool) {
-    let params = appleScriptVerificationParameters
-    return ("fixAlbumArtwork", appleScriptSearchRepresentation, params.0, params.1, false)
-  }
-
-  private var appleScriptCodeToFixPartialArtworkCall: String {
-    return appleScriptCodeToFixArtworkCall(appleScriptFixPartialArtworkParameters)
-  }
-
-  private var appleScriptCodeToFixArtworkCall: String {
-    return appleScriptCodeToFixArtworkCall(appleScriptFixArtworkParameters)
-  }
-}
-
-extension MissingArtwork {
-  private static let appleScriptFixAlbumArtFunctionDefinition = """
-    on clipboardImage(ignored)
-      set imageData to missing value
-      if ((clipboard info) as string) contains "«class PNGf»" then
-        set imageData to (the clipboard as «class PNGf»)
-      end if
-      return imageData
-    end clipboardImage
-    on findPartialImage(results)
-      set imageData to missing value
-      tell application "Music"
-        repeat with trk in results
-          if (count of artworks of trk) is not 0 then
-            set imageData to data of item 1 of artworks of trk
-            if imageData is not missing value then
-              exit repeat
-            end if
-          end if
-        end repeat
-      end tell
-      return imageData
-    end findPartialImage
-    on verifyTrack(trk, albumString, artistString)
-      set matches to false
-      tell application "Music"
-        set matches to album of trk is equal to albumString
-        if matches is true and length of artistString is not 0 then
-          set matches to artist of trk is equal to artistString
-        end if
-      end tell
-      return matches
-    end verifyTrack
-    on fixAlbumArtworkPartial(searchString, albumString, artistString, findImageInTracks)
-      fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks, missing value)
-    end fixAlbumArtworkPartial
-    on fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks, externalImageData)
-      tell application "Music"
-        global findImageHandler
-        set findImageHandler to missing value
-        if findImageInTracks is true then
-          set findImageHandler to findPartialImage
-        else
-          set findImageHandler to clipboardImage
-        end if
-        try
-          set unfilteredResults to search the first library playlist for searchString
-        on error errorString number errorNumber
-          error "Cannot find " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 501
-        end try
-        set results to {}
-        repeat with trk in unfilteredResults
-          if my verifyTrack(trk, albumString, artistString) then
-            set the end of results to trk
-          end if
-        end repeat
+  extension MissingArtwork {
+    private static let appleScriptFixAlbumArtFunctionDefinition = """
+      on clipboardImage(ignored)
         set imageData to missing value
-        if externalImageData is not missing value then
-          set imageData to externalImageData
-        else
-          set imageData to my findImageHandler(results)
+        if ((clipboard info) as string) contains "«class PNGf»" then
+          set imageData to (the clipboard as «class PNGf»)
         end if
-        if imageData is missing value then
-          set message to "Cannot find image data for " & searchString
-          error message number 502
-        end if
-        repeat with trk in results
-          try
-            set artwrks to artworks of trk
-            if artwrks is missing value then
-              delete artworks of trk
-            else if length of artwrks is 0 then
-              delete artworks of trk
+        return imageData
+      end clipboardImage
+      on findPartialImage(results)
+        set imageData to missing value
+        tell application "Music"
+          repeat with trk in results
+            if (count of artworks of trk) is not 0 then
+              set imageData to data of item 1 of artworks of trk
+              if imageData is not missing value then
+                exit repeat
+              end if
             end if
-          on error errorString number errorNumber
-            error "Cannot reset artwork for: " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 503
-          end try
+          end repeat
+        end tell
+        return imageData
+      end findPartialImage
+      on verifyTrack(trk, albumString, artistString)
+        set matches to false
+        tell application "Music"
+          set matches to album of trk is equal to albumString
+          if matches is true and length of artistString is not 0 then
+            set matches to artist of trk is equal to artistString
+          end if
+        end tell
+        return matches
+      end verifyTrack
+      on fixAlbumArtworkPartial(searchString, albumString, artistString, findImageInTracks)
+        fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks, missing value)
+      end fixAlbumArtworkPartial
+      on fixAlbumArtwork(searchString, albumString, artistString, findImageInTracks, externalImageData)
+        tell application "Music"
+          global findImageHandler
+          set findImageHandler to missing value
+          if findImageInTracks is true then
+            set findImageHandler to findPartialImage
+          else
+            set findImageHandler to clipboardImage
+          end if
           try
-            set data of artwork 1 of trk to imageData
+            set unfilteredResults to search the first library playlist for searchString
           on error errorString number errorNumber
-            error "Cannot set artwork for: " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 504
+            error "Cannot find " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 501
           end try
-        end repeat
-      end tell
-      return true
-    end fixAlbumArtwork
-
-    """
-
-  private static func _artworksAppleScript(
-    _ missingArtworks: [MissingArtwork], caller: ((MissingArtwork) -> String)
-  ) -> String {
-    var appleScript = """
-      \(appleScriptFixAlbumArtFunctionDefinition)
+          set results to {}
+          repeat with trk in unfilteredResults
+            if my verifyTrack(trk, albumString, artistString) then
+              set the end of results to trk
+            end if
+          end repeat
+          set imageData to missing value
+          if externalImageData is not missing value then
+            set imageData to externalImageData
+          else
+            set imageData to my findImageHandler(results)
+          end if
+          if imageData is missing value then
+            set message to "Cannot find image data for " & searchString
+            error message number 502
+          end if
+          repeat with trk in results
+            try
+              set artwrks to artworks of trk
+              if artwrks is missing value then
+                delete artworks of trk
+              else if length of artwrks is 0 then
+                delete artworks of trk
+              end if
+            on error errorString number errorNumber
+              error "Cannot reset artwork for: " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 503
+            end try
+            try
+              set data of artwork 1 of trk to imageData
+            on error errorString number errorNumber
+              error "Cannot set artwork for: " & searchString & " (" & errorString & " " & (errorNumber as string) & ")" number 504
+            end try
+          end repeat
+        end tell
+        return true
+      end fixAlbumArtwork
 
       """
-    for missingArtwork in missingArtworks {
+
+    private static func _artworksAppleScript(
+      _ missingArtworks: [MissingArtwork], caller: ((MissingArtwork) -> String)
+    ) -> String {
+      var appleScript = """
+        \(appleScriptFixAlbumArtFunctionDefinition)
+
+        """
+      for missingArtwork in missingArtworks {
+        appleScript.append(
+          """
+          try
+            \(caller(missingArtwork))
+          on error errorString
+            log \"Error Trying to Fix Artwork: \" & errorString
+          end try
+
+          """)
+      }
       appleScript.append(
         """
-        try
-          \(caller(missingArtwork))
-        on error errorString
-          log \"Error Trying to Fix Artwork: \" & errorString
-        end try
-
+        return true
         """)
+      return appleScript
     }
-    appleScript.append(
-      """
-      return true
-      """)
-    return appleScript
-  }
 
-  public static func partialArtworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
-    return _artworksAppleScript(missingArtworks) {
-      missingArtwork in
-      missingArtwork.appleScriptCodeToFixPartialArtworkCall
+    public static func partialArtworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
+      return _artworksAppleScript(missingArtworks) {
+        missingArtwork in
+        missingArtwork.appleScriptCodeToFixPartialArtworkCall
+      }
     }
-  }
 
-  public static func artworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
-    return _artworksAppleScript(missingArtworks) {
-      missingArtwork in
-      missingArtwork.appleScriptCodeToFixArtworkCall
+    public static func artworksAppleScript(_ missingArtworks: [MissingArtwork]) -> String {
+      return _artworksAppleScript(missingArtworks) {
+        missingArtwork in
+        missingArtwork.appleScriptCodeToFixArtworkCall
+      }
     }
   }
-}
 
-extension MissingArtwork {
-  static func createScript() async throws -> AppleScript {
-    try AppleScript(source: MissingArtwork.appleScriptFixAlbumArtFunctionDefinition)
-  }
-}
-
-extension AppleScript {
-  func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws -> Bool {
-    let params = missingArtwork.appleScriptFixPartialArtworkParameters
-    return try self.run(
-      handler: params.0,
-      parameters: params.1, params.2, params.3, params.4)
+  extension MissingArtwork {
+    static func createScript() async throws -> AppleScript {
+      try AppleScript(source: MissingArtwork.appleScriptFixAlbumArtFunctionDefinition)
+    }
   }
 
-  func fixArtwork(_ missingArtwork: MissingArtwork, image: NSImage) throws -> Bool {
-    let params = missingArtwork.appleScriptFixArtworkParameters
-    return try self.run(
-      handler: params.0, parameters: params.1, params.2, params.3, params.4, image)
+  extension AppleScript {
+    func fixPartialArtwork(_ missingArtwork: MissingArtwork) throws -> Bool {
+      let params = missingArtwork.appleScriptFixPartialArtworkParameters
+      return try self.run(
+        handler: params.0,
+        parameters: params.1, params.2, params.3, params.4)
+    }
+
+    func fixArtwork(_ missingArtwork: MissingArtwork, image: NSImage) throws -> Bool {
+      let params = missingArtwork.appleScriptFixArtworkParameters
+      return try self.run(
+        handler: params.0, parameters: params.1, params.2, params.3, params.4, image)
+    }
   }
-}
 #endif
