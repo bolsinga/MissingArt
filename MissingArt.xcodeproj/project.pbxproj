@@ -13,6 +13,7 @@
 		FE54C0AF299DE61100EB6DDD /* LoadingState in Frameworks */ = {isa = PBXBuildFile; productRef = FE54C0AE299DE61100EB6DDD /* LoadingState */; };
 		FE57696F294509200041E18D /* MissingArtwork+AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */; };
 		FE57697629494EA40041E18D /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57697529494EA40041E18D /* AppleScript.swift */; };
+		FE5DFF162AED9C40001A7E71 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = FE5DFF152AED9C40001A7E71 /* Config.xcconfig */; };
 		FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */; };
 		FE6D2C5327FF54680056FA7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5227FF54680056FA7E /* Assets.xcassets */; };
 		FE6D2C5627FF54680056FA7E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5527FF54680056FA7E /* Preview Assets.xcassets */; };
@@ -26,6 +27,7 @@
 		FE21F51329998CC800605465 /* NSPasteboard+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Convenience.swift"; sourceTree = "<group>"; };
 		FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MissingArtwork+AppleScript.swift"; sourceTree = "<group>"; };
 		FE57697529494EA40041E18D /* AppleScript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleScript.swift; sourceTree = "<group>"; };
+		FE5DFF152AED9C40001A7E71 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = SOURCE_ROOT; };
 		FE6D2C4B27FF54670056FA7E /* MissingArt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MissingArt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingArtApp.swift; sourceTree = "<group>"; };
 		FE6D2C5227FF54680056FA7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 		FE6D2C4D27FF54670056FA7E /* MissingArt */ = {
 			isa = PBXGroup;
 			children = (
+				FE5DFF152AED9C40001A7E71 /* Config.xcconfig */,
 				FE8A3F6929CA28F600D58741 /* Info.plist */,
 				FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */,
 				FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */,
@@ -164,6 +167,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE5DFF162AED9C40001A7E71 /* Config.xcconfig in Resources */,
 				FE6D2C5627FF54680056FA7E /* Preview Assets.xcassets in Resources */,
 				FE21F50C298DD81800605465 /* Localizable.strings in Resources */,
 				FE6D2C5327FF54680056FA7E /* Assets.xcassets in Resources */,
@@ -320,6 +324,7 @@
 		};
 		FE6D2C5B27FF54680056FA7E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE5DFF152AED9C40001A7E71 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -363,6 +368,7 @@
 		};
 		FE6D2C5C27FF54680056FA7E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE5DFF152AED9C40001A7E71 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -370,7 +376,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"MissingArt/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = "$(inherited)";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
