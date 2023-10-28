@@ -5,6 +5,7 @@
 //  Created by Greg Bolsinga on 12/13/22.
 //
 
+#if canImport(AppKit)
 import AppKit
 import Carbon
 import Foundation
@@ -157,3 +158,4 @@ public struct AppleScript {
     return try run(handler: handler, parameters: asParameters)
   }
 }
+#endif

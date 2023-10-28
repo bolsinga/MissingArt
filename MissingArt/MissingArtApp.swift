@@ -12,10 +12,11 @@ import SwiftUI
 @main
 struct MissingArtApp: App {
 
-  @State private var loadingState: LoadingState<AppleScript> = .idle
-
-  @State private var fixArtError: Error?
   @State private var processingStates: [MissingArtwork: ProcessingState] = [:]
+
+  #if canImport(AppKit)
+  @State private var loadingState: LoadingState<AppleScript> = .idle
+  @State private var fixArtError: Error?
 
   var hasError: Bool {
     return fixArtError != nil || loadingState.isError
@@ -66,10 +67,12 @@ struct MissingArtApp: App {
       "Fix Art",
       comment: "Menu Action to fix album artwork in process.")
   }
+  #endif
 
   var body: some Scene {
     WindowGroup {
       MissingArtworkView(processingStates: $processingStates)
+        #if canImport(AppKit)
         .alert(
           isPresented: .constant(hasError), error: currentError,
           actions: { error in
@@ -89,7 +92,10 @@ struct MissingArtApp: App {
         .task {
           await loadingState.load()
         }
-    }.commands {
+        #endif
+    }
+    #if canImport(AppKit)
+    .commands {
       MissingArtworkCommands(
         noArtworkContextMenuBuilder: {
           (missingImages: [(missingArtwork: MissingArtwork, image: PlatformImage)]) in
@@ -159,5 +165,6 @@ struct MissingArtApp: App {
         }
       )
     }
+    #endif
   }
 }
