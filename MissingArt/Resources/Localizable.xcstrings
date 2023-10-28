@@ -1,0 +1,30 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "AppleScript cannot be initialized. Use the AppleScript Editor to run scripts." : {
+      "comment" : "Recovery message when AppleScript cannot be initialized by the application."
+    },
+    "AppleScript Initialization Error: %@" : {
+      "comment" : "Error message when AppleScript cannot be initialized by the application."
+    },
+    "Copy Artwork Image" : {
+      "comment" : "Menu Action to copy the selected album image."
+    },
+    "Copy Fix Art AppleScript" : {
+      "comment" : "Menu Action to copy AppleScript to fix album artwork."
+    },
+    "Fix Art" : {
+      "comment" : "Menu Action to fix album artwork in process."
+    },
+    "OK" : {
+      "comment" : "OK button for alert shown when there is an unrecoverable error."
+    },
+    "The artwork was not able to be fixed. Try running as an AppleScript." : {
+      "comment" : "Recovery message when missing artwork cannot be fixed."
+    },
+    "Unable to change Music artwork image for %@: %@" : {
+      "comment" : "Error message when missing artwork cannot be fixed."
+    }
+  },
+  "version" : "1.0"
+}
