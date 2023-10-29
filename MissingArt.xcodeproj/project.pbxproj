@@ -10,7 +10,6 @@
 		FE21F50C298DD81800605465 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FE21F50A298DD81800605465 /* Localizable.strings */; };
 		FE21F512299754D100605465 /* FixArtError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE21F511299754D100605465 /* FixArtError.swift */; };
 		FE21F51429998CC800605465 /* NSPasteboard+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE21F51329998CC800605465 /* NSPasteboard+Convenience.swift */; };
-		FE54C0AF299DE61100EB6DDD /* LoadingState in Frameworks */ = {isa = PBXBuildFile; productRef = FE54C0AE299DE61100EB6DDD /* LoadingState */; };
 		FE57696F294509200041E18D /* MissingArtwork+AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */; };
 		FE57697629494EA40041E18D /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57697529494EA40041E18D /* AppleScript.swift */; };
 		FE5DFF162AED9C40001A7E71 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = FE5DFF152AED9C40001A7E71 /* Config.xcconfig */; };
@@ -43,7 +42,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE95DA48281216E1009B0209 /* MissingArtwork in Frameworks */,
-				FE54C0AF299DE61100EB6DDD /* LoadingState in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,7 +117,6 @@
 			name = MissingArt;
 			packageProductDependencies = (
 				FE95DA47281216E1009B0209 /* MissingArtwork */,
-				FE54C0AE299DE61100EB6DDD /* LoadingState */,
 			);
 			productName = MissingArt;
 			productReference = FE6D2C4B27FF54670056FA7E /* MissingArt.app */;
@@ -151,7 +148,6 @@
 			mainGroup = FE6D2C4227FF54670056FA7E;
 			packageReferences = (
 				FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */,
-				FE54C0AD299DE61100EB6DDD /* XCRemoteSwiftPackageReference "LoadingState" */,
 			);
 			productRefGroup = FE6D2C4C27FF54670056FA7E /* Products */;
 			projectDirPath = "";
@@ -435,14 +431,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FE54C0AD299DE61100EB6DDD /* XCRemoteSwiftPackageReference "LoadingState" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/bolsinga/LoadingState";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bolsinga/itunes_missing_artwork";
@@ -454,11 +442,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FE54C0AE299DE61100EB6DDD /* LoadingState */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FE54C0AD299DE61100EB6DDD /* XCRemoteSwiftPackageReference "LoadingState" */;
-			productName = LoadingState;
-		};
 		FE95DA47281216E1009B0209 /* MissingArtwork */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FE95DA46281216E1009B0209 /* XCRemoteSwiftPackageReference "itunes_missing_artwork" */;
