@@ -7,7 +7,6 @@
 
 #if canImport(AppKit)
   import Foundation
-  import LoadingState
   import MissingArtwork
 
   private enum LoadScriptError: Error {
