@@ -14,18 +14,18 @@ struct MissingArtApp: App {
   @State private var processingStates: [MissingArtwork: ProcessingState] = [:]
 
   #if canImport(AppKit)
-    @State private var loadingState: LoadingState<AppleScript> = .idle
+    @State private var appleScript: AppleScript?
     @State private var fixArtError: Error?
 
     var hasError: Bool {
-      return fixArtError != nil || loadingState.isError
+      return fixArtError != nil
     }
 
     var currentError: WrappedLocalizedError? {
       if let error = fixArtError {
         return WrappedLocalizedError.wrapError(error: error)
       }
-      return loadingState.currentError
+      return nil
     }
 
     private func reportError(_ error: FixArtError) {
@@ -77,9 +77,6 @@ struct MissingArtApp: App {
             actions: { error in
               Button {
                 fixArtError = nil
-                if loadingState.isError {
-                  loadingState = .idle
-                }
               } label: {
                 Text(
                   "OK", comment: "OK button for alert shown when there is an unrecoverable error.")
@@ -90,7 +87,11 @@ struct MissingArtApp: App {
             }
           )
           .task {
-            await loadingState.load()
+            do {
+              appleScript = try await AppleScript.load()
+            } catch {
+              fixArtError = error
+            }
           }
         #endif
     }
@@ -120,7 +121,7 @@ struct MissingArtApp: App {
 
             Button {
               Task {
-                guard let script = loadingState.value else {
+                guard let script = appleScript else {
                   debugPrint("Task is running when button should be disabled.")
                   return
                 }
@@ -148,7 +149,7 @@ struct MissingArtApp: App {
 
             Button {
               Task {
-                guard let script = loadingState.value else {
+                guard let script = appleScript else {
                   debugPrint("Task is running when button should be disabled.")
                   return
                 }
