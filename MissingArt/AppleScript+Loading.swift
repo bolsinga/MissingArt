@@ -1,5 +1,5 @@
 //
-//  LoadingState+AppleScript.swift
+//  AppleScript+Loading.swift
 //  MissingArt
 //
 //  Created by Greg Bolsinga on 1/22/23.
@@ -34,20 +34,12 @@
     }
   }
 
-  extension LoadingState where Value == AppleScript {
-    mutating func load() async {
-      guard case .idle = self else {
-        return
-      }
-
-      self = .loading
-
+  extension AppleScript {
+    static func load() async throws -> Self {
       do {
-        let script = try await MissingArtwork.createScript()
-
-        self = .loaded(script)
+        return try await MissingArtwork.createScript()
       } catch {
-        self = .error(LoadScriptError.cannotInitializeScript(error))
+        throw LoadScriptError.cannotInitializeScript(error)
       }
     }
   }
