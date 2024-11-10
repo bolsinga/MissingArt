@@ -11,7 +11,6 @@
 		FE21F51429998CC800605465 /* NSPasteboard+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE21F51329998CC800605465 /* NSPasteboard+Convenience.swift */; };
 		FE57696F294509200041E18D /* MissingArtwork+AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57696E294509200041E18D /* MissingArtwork+AppleScript.swift */; };
 		FE57697629494EA40041E18D /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE57697529494EA40041E18D /* AppleScript.swift */; };
-		FE5DFF162AED9C40001A7E71 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = FE5DFF152AED9C40001A7E71 /* Config.xcconfig */; };
 		FE5DFF1C2AEDA534001A7E71 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = FE5DFF1B2AEDA534001A7E71 /* Localizable.xcstrings */; };
 		FE6D2C4F27FF54670056FA7E /* MissingArtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D2C4E27FF54670056FA7E /* MissingArtApp.swift */; };
 		FE6D2C5327FF54680056FA7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE6D2C5227FF54680056FA7E /* Assets.xcassets */; };
@@ -130,7 +129,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					FE6D2C4A27FF54670056FA7E = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -163,7 +162,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE5DFF162AED9C40001A7E71 /* Config.xcconfig in Resources */,
 				FE5DFF1C2AEDA534001A7E71 /* Localizable.xcstrings in Resources */,
 				FE6D2C5627FF54680056FA7E /* Preview Assets.xcassets in Resources */,
 				FE6D2C5327FF54680056FA7E /* Assets.xcassets in Resources */,
