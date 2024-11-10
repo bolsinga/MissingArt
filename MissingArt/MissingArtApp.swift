@@ -86,7 +86,7 @@ struct MissingArtApp: App {
               Text(error.recoverySuggestion ?? "")
             }
           )
-          .task {
+          .task { @MainActor in
             do {
               appleScript = try await AppleScript.load()
             } catch {
