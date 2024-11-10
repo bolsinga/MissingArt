@@ -35,6 +35,7 @@
   }
 
   extension AppleScript {
+    @MainActor
     static func load() async throws -> Self {
       do {
         return try await MissingArtwork.createScript()

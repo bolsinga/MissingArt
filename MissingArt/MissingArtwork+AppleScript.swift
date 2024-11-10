@@ -189,6 +189,7 @@
   }
 
   extension MissingArtwork {
+    @MainActor
     static func createScript() async throws -> AppleScript {
       try AppleScript(source: MissingArtwork.appleScriptFixAlbumArtFunctionDefinition)
     }
